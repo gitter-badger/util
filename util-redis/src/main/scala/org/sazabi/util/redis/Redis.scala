@@ -1,5 +1,7 @@
 package org.sazabi.util.redis
 
+import Imports._
+
 import org.sazabi.util.AsyncPool
 
 import com.twitter.conversions.time._
@@ -22,7 +24,7 @@ import syntax.std.option._
 abstract class Redis(host: String, port: Int, db: Int) {
   protected def asyncPool: AsyncPool
 
-  private def service(): Service[Command, Reply] = ClientBuilder()
+  protected def service(): Service[Command, Reply] = ClientBuilder()
     .codec(FR())
     .hosts("%s:%d".format(host, port))
     .hostConnectionLimit(1)
@@ -41,11 +43,10 @@ abstract class Redis(host: String, port: Int, db: Int) {
       asyncPool(f(c)) ensure { c.release() }
     }
 
-  def newClient(): Future[Client] = {
+  def newClient(): Future[Client] =
     asyncPool(new Client(service())) flatMap { c =>
-      c.select(db).map(_ => c)
+      c.select(db) >| c
     }
-  }
 }
 
 /**

@@ -31,7 +31,7 @@ object UtilBuild extends Build {
   lazy val all = Project(
     "util-all",
     file(".")
-  ).aggregate(core, querulous, finagleHttp, id, redis)
+  ).aggregate(core, querulous, finagleHttp, id, redis, json)
 
   // Core utilities
   lazy val core = Project(
@@ -101,4 +101,17 @@ object UtilBuild extends Build {
       "com.twitter" % "finagle-redis_2.9.2" % "5.3.19-solar" % "compile" intransitive()
     )
   ).dependsOn(core)
+
+  // json
+  lazy val json = Project(
+    "util-json",
+    file("util-json"),
+    settings = Project.defaultSettings ++ sharedSettings
+  ).settings(
+    name := "util-json",
+    libraryDependencies ++= Seq(
+      "net.liftweb" % "lift-json_2.9.1" % "2.4" % "compile",
+      "org.scalaz" %% "scalaz-core" % "7.0.0-M3" % "compile"
+    )
+  )
 }
