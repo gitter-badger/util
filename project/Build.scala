@@ -49,7 +49,7 @@ object UtilBuild extends Build {
 
   // Database using querulous
   lazy val querulous = Project(
-    "casino-util-querulous",
+    "util-querulous",
     file("util-querulous"),
     settings = Project.defaultSettings ++ sharedSettings
   ).settings(
