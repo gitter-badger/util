@@ -13,7 +13,7 @@ object UtilBuild extends Build {
   val scalazVersion = "7.0.0-M3"
 
   val sharedSettings = Seq(
-    version := "0.1.0-SNAPSHOT",
+    version := "0.1.0",
     organization := "org.sazabi",
     scalaVersion := "2.9.2",
     scalacOptions ++= Seq(
@@ -43,8 +43,7 @@ object UtilBuild extends Build {
     libraryDependencies ++= Seq(
       "com.github.philcali" %% "scalendar" % "0.1.3" % "compile",
       "com.twitter" % "finagle-core" % finagleVersion % "compile",
-      "com.twitter" % "finagle-http" % finagleVersion % "compile",
-      "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
+      "com.twitter" % "finagle-http" % finagleVersion % "compile"
     )
   ).dependsOn(json)
 
@@ -110,7 +109,7 @@ object UtilBuild extends Build {
     name := "util-json",
     libraryDependencies ++= Seq(
       "net.liftweb" % "lift-json_2.9.1" % "2.4" % "compile",
-      "org.scalaz" %% "scalaz-core" % "7.0.0-M3" % "compile"
+      "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
     )
   )
 }
