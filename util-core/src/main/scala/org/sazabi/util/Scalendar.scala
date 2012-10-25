@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 
 import net.liftweb.json.{JInt, JValue}
 
-import org.sazabi.json.scalaz.{Formats, Result}
+import org.sazabi.util.json.{Formats, Result}
 
 import scalaz._
 import syntax.id._
@@ -38,15 +38,14 @@ trait Scalendars {
   def dateFormat: SimpleDateFormat = localDateFormat.get
 
   // Type classes for scalaz.
-  implicit val ScalendarOrder: Order[Scalendar] = Order.orderBy(_.time)
-  implicit val ScalendarShow: Show[Scalendar] =
+  implicit val scalendarOrder: Order[Scalendar] = Order.orderBy(_.time)
+  implicit val scalendarShow: Show[Scalendar] =
     Show.show(cal => Cord(datetimeFormat.format(cal.time)))
 
-  implicit val ScalendarFormat: Formats[Scalendar] = new Formats[Scalendar] {
+  implicit val scalendarFormats: Formats[Scalendar] = new Formats[Scalendar] {
     def read(json: JValue): Result[Scalendar] = json match {
       case JInt(num) => Scalendar(num.longValue).success
-      case _ =>
-        Failure("Expected a long value as milliseconds from epoch".wrapNel)
+      case _ => "Expected a long value as milliseconds from epoch".failureNel
     }
 
     def write(a: Scalendar): Result[JValue] = JInt(a.time).success

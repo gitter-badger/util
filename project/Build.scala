@@ -44,10 +44,9 @@ object UtilBuild extends Build {
       "com.github.philcali" %% "scalendar" % "0.1.3" % "compile",
       "com.twitter" % "finagle-core" % finagleVersion % "compile",
       "com.twitter" % "finagle-http" % finagleVersion % "compile",
-      "org.scalaz" %% "scalaz-core" % scalazVersion % "compile",
-      "org.sazabi" %% "lift-json-scalaz7" % "0.2.0" % "compile"
+      "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
     )
-  )
+  ).dependsOn(json)
 
   // Database using querulous
   lazy val querulous = Project(

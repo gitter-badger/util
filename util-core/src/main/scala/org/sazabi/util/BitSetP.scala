@@ -2,14 +2,13 @@ package org.sazabi.util
 
 import net.liftweb.json.{JInt, JValue}
 
-import org.sazabi.json.scalaz.{Result => JResult, _}
+import org.sazabi.util.json.{Formats, Result}
 
 import scala.collection.immutable.BitSet
 
 import scalaz._
 import std.anyVal._
 import syntax.equal._
-import syntax.id._
 import syntax.std.boolean._
 import syntax.validation._
 
@@ -26,18 +25,18 @@ trait BitSets {
     val value = v
   }
 
-  implicit def BitSetFormat: Formats[BitSet] = new Formats[BitSet] {
-    def read(json: JValue): JResult[BitSet] = json match {
+  implicit lazy val bitSetFormat: Formats[BitSet] = new Formats[BitSet] {
+    def read(json: JValue): Result[BitSet] = json match {
       case JInt(n) => BitSet.fromArray(Array(n.longValue)).success
-      case _ => "Expected number value".wrapNel.failure
+      case _ => "Expected number value".failureNel
     }
 
-    def write(v: BitSet): JResult[JValue] = {
+    def write(v: BitSet): Result[JValue] = {
       JInt(v.toLong).success
     }
   }
 
-  implicit def BitSetInstance: Monoid[BitSet] with Show[BitSet] with Equal[BitSet] =
+  implicit lazy val bitSetInstance: Monoid[BitSet] with Show[BitSet] with Equal[BitSet] =
       new Monoid[BitSet] with Show[BitSet] with Equal[BitSet] {
     def zero: BitSet = BitSet.empty
 
