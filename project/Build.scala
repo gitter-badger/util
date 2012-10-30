@@ -4,7 +4,7 @@ import Keys._
 object UtilBuild extends Build {
   val utilVersion = "5.3.13"
 
-  val finagleVersion = "5.3.19"
+  val finagleVersion = "5.3.20"
 
   val ostrichVersion = "8.2.9"
 
@@ -13,7 +13,7 @@ object UtilBuild extends Build {
   val scalazVersion = "7.0.0-M3"
 
   val sharedSettings = Seq(
-    version := "0.1.0",
+    version := "0.2.0",
     organization := "org.sazabi",
     scalaVersion := "2.9.2",
     scalacOptions ++= Seq(
@@ -30,8 +30,11 @@ object UtilBuild extends Build {
 
   lazy val all = Project(
     "util-all",
-    file(".")
-  ).aggregate(core, querulous, finagleHttp, id, redis, json)
+    file("."),
+    settings = Project.defaultSettings ++ Seq(
+      publish := false
+    )
+  ).aggregate(core, finagleHttp, id, json, querulous, redis, zk)
 
   // Core utilities
   lazy val core = Project(
@@ -46,19 +49,6 @@ object UtilBuild extends Build {
       "com.twitter" % "finagle-http" % finagleVersion % "compile"
     )
   ).dependsOn(json)
-
-  // Database using querulous
-  lazy val querulous = Project(
-    "util-querulous",
-    file("util-querulous"),
-    settings = Project.defaultSettings ++ sharedSettings
-  ).settings(
-    name := "util-querulous",
-    libraryDependencies ++= Seq(
-      "com.twitter" % "querulous-core" % querulousVersion % "compile",
-      "com.twitter" % "querulous-ostrich4" % querulousVersion % "compile"
-    )
-  ).dependsOn(core)
 
   // finagle http
   lazy val finagleHttp = Project(
@@ -87,6 +77,32 @@ object UtilBuild extends Build {
     )
   )
 
+  // json
+  lazy val json = Project(
+    "util-json",
+    file("util-json"),
+    settings = Project.defaultSettings ++ sharedSettings
+  ).settings(
+    name := "util-json",
+    libraryDependencies ++= Seq(
+      "net.liftweb" % "lift-json_2.9.1" % "2.4" % "compile",
+      "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
+    )
+  )
+
+  // Database using querulous
+  lazy val querulous = Project(
+    "util-querulous",
+    file("util-querulous"),
+    settings = Project.defaultSettings ++ sharedSettings
+  ).settings(
+    name := "util-querulous",
+    libraryDependencies ++= Seq(
+      "com.twitter" % "querulous-core" % querulousVersion % "compile",
+      "com.twitter" % "querulous-ostrich4" % querulousVersion % "compile"
+    )
+  ).dependsOn(core)
+
   // Redis
   lazy val redis = Project(
     "util-redis",
@@ -100,15 +116,15 @@ object UtilBuild extends Build {
     )
   ).dependsOn(core)
 
-  // json
-  lazy val json = Project(
-    "util-json",
-    file("util-json"),
+  // zookeeper
+  lazy val zk = Project(
+    "util-zk",
+    file("util-zk"),
     settings = Project.defaultSettings ++ sharedSettings
   ).settings(
-    name := "util-json",
+    name := "util-zk",
     libraryDependencies ++= Seq(
-      "net.liftweb" % "lift-json_2.9.1" % "2.4" % "compile",
+      "com.twitter" % "util-zk" % utilVersion % "compile",
       "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
     )
   )
