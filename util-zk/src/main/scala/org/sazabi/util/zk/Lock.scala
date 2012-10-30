@@ -23,27 +23,40 @@ import syntax.std.option._
 trait Lock extends Serialized {
   import Lock._
 
+  /**
+   * The parent path containing the lock nodes.
+   */
   protected def basePath: String
 
+  /**
+   * The key of the lock node.
+   * The name of lock node is [id]_[key]_[sequence] (if Separator is "_")
+   */
   protected def lockKey: String
 
+  /**
+   * ZkClient instance.
+   */
   protected def zkClient: ZkClient
 
+  /**
+   * The separator for node name.
+   */
+  protected val Separator = "_"
+
+  /**
+   * The function that returns the next unique id.
+   */
   protected def nextId(): Long
 
-  val client: ZkClient = zkClient.withAcl(OPEN_ACL_UNSAFE.asScala)
+  private lazy val client: ZkClient = zkClient.withAcl(OPEN_ACL_UNSAFE.asScala)
 
-  val log: Logger = Logger("zookeeper")
+  private val log: Logger = Logger("zookeeper")
 
   /**
    * Base(parent) node for locks.
    */
-  lazy val base = client("/" + basePath.stripPrefix("/").stripSuffix("/"))
-
-  /**
-   * Separator for node name.
-   */
-  protected val Separator = "_"
+  private lazy val base = client("/" + basePath.stripPrefix("/").stripSuffix("/"))
 
   /**
    * Lock.
