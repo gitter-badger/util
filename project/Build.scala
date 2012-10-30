@@ -4,7 +4,7 @@ import Keys._
 object UtilBuild extends Build {
   val utilVersion = "5.3.13"
 
-  val finagleVersion = "5.3.19"
+  val finagleVersion = "5.3.20"
 
   val ostrichVersion = "8.2.9"
 
@@ -13,7 +13,7 @@ object UtilBuild extends Build {
   val scalazVersion = "7.0.0-M3"
 
   val sharedSettings = Seq(
-    version := "0.2.0-SNAPSHOT",
+    version := "0.2.0",
     organization := "org.sazabi",
     scalaVersion := "2.9.2",
     scalacOptions ++= Seq(
