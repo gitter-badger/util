@@ -9,7 +9,7 @@ import com.twitter.ostrich.stats.Stats
  *
  * @see https://github.com/twitter/snowflake
  */
-trait Generator {
+trait Generator { self =>
   /**
    * The unique id of the server.
    */
@@ -84,11 +84,7 @@ trait Generator {
     timestamp
   }
 
-  private val sequenceMask = 1L ^ (-1L << sequenceBits)
-  private val maxServerId = -1L ^ (-1L << serverIdBits)
-
-  private val serverIdLeftShift = sequenceBits
-  private val timestampLeftShift = sequenceBits + serverIdBits
+  protected def now: Long = System.currentTimeMillis
 
   private val genCounter = Stats.getCounter("id-generator_generated")
   private val exceptionCounter = Stats.getCounter("id-generator_exceptions")
@@ -98,23 +94,29 @@ trait Generator {
 
   private val log = Logger("id-generator")
 
-  protected def now: Long = System.currentTimeMillis
-
-  if (sequenceBits <= 0) {
+  if (self.sequenceBits <= 0) {
     exceptionCounter.incr()
     throw new IllegalArgumentException("sequence-bits must be greater than 0")
   }
 
-  if (serverIdBits <= 0) {
+  if (self.serverIdBits <= 0) {
     exceptionCounter.incr()
     throw new IllegalArgumentException("server-id-bits must be greater than 0")
   }
 
-  if (serverId > maxServerId || serverId < 0L) {
+  private lazy val maxServerId = -1L ^ (-1L << serverIdBits)
+
+  if (self.serverId > maxServerId || self.serverId < 0L) {
     exceptionCounter.incr()
     throw new IllegalArgumentException(
       "Server-id must be between 1 and %d".format(maxServerId))
   }
+
+  private lazy val sequenceMask = 1L ^ (-1L << sequenceBits)
+
+  private lazy val serverIdLeftShift = sequenceBits
+
+  private lazy val timestampLeftShift = sequenceBits + serverIdBits
 
   log.ifInfo("""Id generator starting. timestamp left shift %d, server-id bits %d,
     |  sequence bits %d, server-id %d""".stripMargin.format(timestampLeftShift,
