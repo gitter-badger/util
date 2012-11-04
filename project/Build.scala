@@ -13,7 +13,7 @@ object UtilBuild extends Build {
   val scalazVersion = "7.0.0-M3"
 
   val sharedSettings = Seq(
-    version := "0.3.0-SNAPSHOT",
+    version := "0.2.1",
     organization := "org.sazabi",
     scalaVersion := "2.9.2",
     scalacOptions ++= Seq(
