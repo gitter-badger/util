@@ -13,7 +13,7 @@ object UtilBuild extends Build {
   val scalazVersion = "7.0.0-M3"
 
   val sharedSettings = Seq(
-    version := "0.2.0",
+    version := "0.2.1",
     organization := "org.sazabi",
     scalaVersion := "2.9.2",
     scalacOptions ++= Seq(
@@ -45,8 +45,7 @@ object UtilBuild extends Build {
     name := "util-core",
     libraryDependencies ++= Seq(
       "com.github.philcali" %% "scalendar" % "0.1.3" % "compile",
-      "com.twitter" % "finagle-core" % finagleVersion % "compile",
-      "com.twitter" % "finagle-http" % finagleVersion % "compile"
+      "com.twitter" % "finagle-core" % finagleVersion % "compile"
     )
   ).dependsOn(json)
 

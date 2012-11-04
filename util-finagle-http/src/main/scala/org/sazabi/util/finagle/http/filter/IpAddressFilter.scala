@@ -11,13 +11,15 @@ import com.twitter.util.{Future, NetUtil}
 trait IpAddressFilter[Req <: Request] extends SimpleFilter[Req, Response] {
   def allowedIpBlocks: Seq[(Int, Int)]
 
+  protected def remoteAddress(request: Req): InetAddress = request.remoteAddress
+
   def isAllowed(a: Int): Boolean = NetUtil.isIpInBlocks(a, allowedIpBlocks)
  
   /**
    * Filters a request.
    */
   def apply(request: Req, service: Service[Req, Response]): Future[Response] = {
-    if (isAllowed(NetUtil.inetAddressToInt(request.remoteAddress))) {
+    if (isAllowed(NetUtil.inetAddressToInt(remoteAddress(req)))) {
       service(request)
     } else {
       Future.value(Response(Version.Http11, Status.Forbidden))
