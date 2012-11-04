@@ -32,7 +32,8 @@ object UtilBuild extends Build {
     "util-all",
     file("."),
     settings = Project.defaultSettings ++ Seq(
-      publish := false
+      publish := {},
+      publishLocal := {}
     )
   ).aggregate(core, finagleHttp, id, json, querulous, redis, zk)
 
@@ -53,8 +54,7 @@ object UtilBuild extends Build {
   lazy val finagleHttp = Project(
     "util-finagle-http",
     file("util-finagle-http"),
-    settings = Project.defaultSettings ++
-      sharedSettings
+    settings = Project.defaultSettings ++ sharedSettings
   ).settings(
     name := "util-finagle-http",
     libraryDependencies ++= Seq(
