@@ -4,6 +4,8 @@ import com.twitter.finagle.{Service, SimpleFilter}
 import com.twitter.finagle.http.{Request, Response, Status, Version}
 import com.twitter.util.{Future, NetUtil}
 
+import java.net.InetAddress
+
 /**
  * A trait of filter that filters requests
  * if those aren't from allowed ip blocks.
@@ -19,7 +21,7 @@ trait IpAddressFilter[Req <: Request] extends SimpleFilter[Req, Response] {
    * Filters a request.
    */
   def apply(request: Req, service: Service[Req, Response]): Future[Response] = {
-    if (isAllowed(NetUtil.inetAddressToInt(remoteAddress(req)))) {
+    if (isAllowed(NetUtil.inetAddressToInt(remoteAddress(request)))) {
       service(request)
     } else {
       Future.value(Response(Version.Http11, Status.Forbidden))
