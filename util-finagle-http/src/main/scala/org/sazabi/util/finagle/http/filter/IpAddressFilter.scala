@@ -6,6 +6,9 @@ import com.twitter.util.{Future, NetUtil}
 
 import java.net.InetAddress
 
+import scalaz._
+import syntax.std.option._
+
 /**
  * A trait of filter that filters requests if those remote addresses aren't
  * from allowed ip blocks.
