@@ -13,7 +13,7 @@ object UtilBuild extends Build {
   val scalazVersion = "7.0.0-M3"
 
   val sharedSettings = Seq(
-    version := "0.2.1",
+    version := "0.2.2",
     organization := "org.sazabi",
     scalaVersion := "2.9.2",
     scalacOptions ++= Seq(
@@ -32,7 +32,8 @@ object UtilBuild extends Build {
     "util-all",
     file("."),
     settings = Project.defaultSettings ++ Seq(
-      publish := false
+      publish := {},
+      publishLocal := {}
     )
   ).aggregate(core, finagleHttp, id, json, querulous, redis, zk)
 
@@ -53,8 +54,7 @@ object UtilBuild extends Build {
   lazy val finagleHttp = Project(
     "util-finagle-http",
     file("util-finagle-http"),
-    settings = Project.defaultSettings ++
-      sharedSettings
+    settings = Project.defaultSettings ++ sharedSettings
   ).settings(
     name := "util-finagle-http",
     libraryDependencies ++= Seq(

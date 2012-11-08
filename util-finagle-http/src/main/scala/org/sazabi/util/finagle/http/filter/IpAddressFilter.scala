@@ -7,13 +7,17 @@ import com.twitter.util.{Future, NetUtil}
 import java.net.InetAddress
 
 /**
- * A trait of filter that filters requests
- * if those aren't from allowed ip blocks.
+ * A trait of filter that filters requests if those remote addresses aren't
+ * from allowed ip blocks.
+ * This trait uses X-Forwarded-For header if it exists.
  */
 trait IpAddressFilter[Req <: Request] extends SimpleFilter[Req, Response] {
   def allowedIpBlocks: Seq[(Int, Int)]
 
-  protected def remoteAddress(request: Req): InetAddress = request.remoteAddress
+  protected def remoteAddress(request: Req): InetAddress = {
+    val xForwardedFor = request.xForwardedFor map { InetAddress.getByName(_) }
+    xForwardedFor | request.remoteAddress
+  }
 
   def isAllowed(a: Int): Boolean = NetUtil.isIpInBlocks(a, allowedIpBlocks)
  
