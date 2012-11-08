@@ -21,7 +21,6 @@ object UtilBuild extends Build {
       "-deprecation"
     ),
     resolvers ++= Seq(
-      Classpaths.typesafeResolver,
       Resolver.url("My github releases", url("http://solar.github.com/ivy2/releases/"))(Resolver.ivyStylePatterns),
       Resolver.url("My github snapshots", url("http://solar.github.com/ivy2/snapshots/"))(Resolver.ivyStylePatterns),
       "twitter" at "http://maven.twttr.com"
@@ -46,7 +45,8 @@ object UtilBuild extends Build {
     name := "util-core",
     libraryDependencies ++= Seq(
       "com.github.philcali" %% "scalendar" % "0.1.3" % "compile",
-      "com.twitter" % "finagle-core" % finagleVersion % "compile"
+      "com.twitter" % "util-core" % utilVersion % "compile",
+      "io.netty" % "netty" % "3.5.9.Final" % "compile"
     )
   ).dependsOn(json)
 
