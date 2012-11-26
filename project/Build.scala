@@ -4,13 +4,13 @@ import Keys._
 object UtilBuild extends Build {
   val utilVersion = "5.3.13"
 
-  val finagleVersion = "5.3.20"
+  val finagleVersion = "5.3.22"
 
   val ostrichVersion = "8.2.9"
 
   val querulousVersion = "3.0.3"
 
-  val scalazVersion = "7.0.0-M3"
+  val scalazVersion = "7.0.0-M5"
 
   val sharedSettings = Seq(
     version := "0.3.0-SNAPSHOT",
@@ -22,7 +22,6 @@ object UtilBuild extends Build {
     ),
     resolvers ++= Seq(
       Resolver.url("My github releases", url("http://solar.github.com/ivy2/releases/"))(Resolver.ivyStylePatterns),
-      Resolver.url("My github snapshots", url("http://solar.github.com/ivy2/snapshots/"))(Resolver.ivyStylePatterns),
       "twitter" at "http://maven.twttr.com"
     )
   )
@@ -111,7 +110,7 @@ object UtilBuild extends Build {
     name := "util-redis",
     libraryDependencies ++= Seq(
       "com.twitter" % "finagle-ostrich4" % finagleVersion % "compile",
-      "com.twitter" % "finagle-redis_2.9.2" % "5.3.19-solar" % "compile" intransitive()
+      "com.twitter" % "finagle-redis" % finagleVersion % "compile"
     )
   ).dependsOn(core)
 
