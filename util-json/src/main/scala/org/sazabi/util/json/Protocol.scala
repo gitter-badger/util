@@ -14,7 +14,7 @@ trait Protocol {
       (implicit v1f: Formats[V1], v2f: Formats[V2]): Formats[A] = new Formats[A] {
     def read(js: JValue): Result[A] = js match {
       case j @ JObject(_) => {
-        ^(field[V1](v1)(j),
+        Apply[Result].apply2(field[V1](v1)(j),
           field[V2](v2)(j))(apply)
       }
       case _ => "Object expected".wrapNel.failure
@@ -33,7 +33,7 @@ trait Protocol {
         Formats[A] = new Formats[A] {
     def read(js: JValue): Result[A] = js match {
       case j @ JObject(_) => {
-        ^(field[V1](v1)(j),
+        Apply[Result].apply3(field[V1](v1)(j),
           field[V2](v2)(j),
           field[V3](v3)(j))(apply)
       }
@@ -55,7 +55,7 @@ trait Protocol {
         v4f: Formats[V4]): Formats[A] = new Formats[A] {
     def read(js: JValue): Result[A] = js match {
       case j @ JObject(_) => {
-        ^(field[V1](v1)(j),
+        Apply[Result].apply4(field[V1](v1)(j),
           field[V2](v2)(j),
           field[V3](v3)(j),
           field[V4](v4)(j))(apply)
@@ -79,7 +79,7 @@ trait Protocol {
         v4f: Formats[V4], vf5: Formats[V5]): Formats[A] = new Formats[A] {
     def read(js: JValue): Result[A] = js match {
       case j @ JObject(_) => {
-        ^(field[V1](v1)(j),
+        Apply[Result].apply5(field[V1](v1)(j),
           field[V2](v2)(j),
           field[V3](v3)(j),
           field[V4](v4)(j),
@@ -107,7 +107,7 @@ trait Protocol {
       Formats[A] = new Formats[A] {
     def read(js: JValue): Result[A] = js match {
       case j @ JObject(_) => {
-        ^(field[V1](v1)(j),
+        Apply[Result].apply6(field[V1](v1)(j),
           field[V2](v2)(j),
           field[V3](v3)(j),
           field[V4](v4)(j),
@@ -138,7 +138,7 @@ trait Protocol {
       Formats[A] = new Formats[A] {
     def read(js: JValue): Result[A] = js match {
       case j @ JObject(_) => {
-        ^(field[V1](v1)(j),
+        Apply[Result].apply7(field[V1](v1)(j),
           field[V2](v2)(j),
           field[V3](v3)(j),
           field[V4](v4)(j),
@@ -171,7 +171,7 @@ trait Protocol {
         v8f: Formats[V8]): Formats[A] = new Formats[A] {
     def read(js: JValue): Result[A] = js match {
       case j @ JObject(_) => {
-        Apply[Result].apply(field[V1](v1)(j),
+        Apply[Result].apply8(field[V1](v1)(j),
           field[V2](v2)(j),
           field[V3](v3)(j),
           field[V4](v4)(j),
@@ -206,7 +206,7 @@ trait Protocol {
         v8f: Formats[V8], v9f: Formats[V9]): Formats[A] = new Formats[A] {
     def read(js: JValue): Result[A] = js match {
       case j @ JObject(_) => {
-        Apply[Result].apply(field[V1](v1)(j),
+        Apply[Result].apply9(field[V1](v1)(j),
           field[V2](v2)(j),
           field[V3](v3)(j),
           field[V4](v4)(j),
