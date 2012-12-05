@@ -12,18 +12,20 @@ import com.twitter.finagle.stats.OstrichStatsReceiver
 import com.twitter.finagle.Service
 import com.twitter.util.Future
 
+import java.net.InetSocketAddress
+
 import scalaz._
 import syntax.functor._
 
 /**
  * Redis instance for a single redis node.
  */
-abstract class Redis(host: String, port: Int, db: Int) {
+abstract class Redis(hosts: String, db: Int) {
   protected def asyncPool: AsyncPool
 
   protected def service(): Service[Command, Reply] = ClientBuilder()
     .codec(FR())
-    .hosts("%s:%d".format(host, port))
+    .hosts(hosts)
     .hostConnectionLimit(1)
     .tcpConnectTimeout(3000.milliseconds)
     .retries(2)
