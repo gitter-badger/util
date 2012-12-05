@@ -2,11 +2,11 @@ import sbt._
 import Keys._
 
 object UtilBuild extends Build {
-  val utilVersion = "5.3.13"
+  val utilVersion = "6.0.1"
 
-  val finagleVersion = "5.3.22"
+  val finagleVersion = "6.0.1"
 
-  val ostrichVersion = "8.2.9"
+  val ostrichVersion = "9.0.2"
 
   val querulousVersion = "3.0.3"
 
@@ -70,7 +70,8 @@ object UtilBuild extends Build {
   ).settings(
     name := "util-id",
     libraryDependencies ++= Seq(
-      "com.twitter" % "util-logging" % utilVersion % "compile",
+      "com.twitter" % "util-logging" % utilVersion % "compile" from
+      "http://maven.twttr.com/com/twitter/util-logging/6.0.1/util-logging-6.0.1.jar",
       "com.twitter" % "ostrich" % ostrichVersion % "compile"
     )
   )
