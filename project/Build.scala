@@ -2,18 +2,18 @@ import sbt._
 import Keys._
 
 object UtilBuild extends Build {
-  val utilVersion = "5.3.13"
+  val utilVersion = "6.0.1"
 
-  val finagleVersion = "5.3.22"
+  val finagleVersion = "6.0.1"
 
-  val ostrichVersion = "8.2.9"
+  val ostrichVersion = "9.0.2"
 
   val querulousVersion = "3.0.3"
 
   val scalazVersion = "7.0.0-M5"
 
   val sharedSettings = Seq(
-    version := "0.2.3",
+    version := "0.3.0",
     organization := "org.sazabi",
     scalaVersion := "2.9.2",
     scalacOptions ++= Seq(
