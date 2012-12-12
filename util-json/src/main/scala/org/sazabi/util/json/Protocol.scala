@@ -1,7 +1,7 @@
 package org.sazabi.util.json
 
-import net.liftweb.json._
-import net.liftweb.json.JsonDSL._
+import org.json4s.{JObject, JValue}
+import org.json4s.JsonDSL.{jobject2assoc, pair2Assoc}
 
 import scalaz._
 import syntax.applicative._
