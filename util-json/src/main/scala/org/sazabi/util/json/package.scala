@@ -1,6 +1,7 @@
 package org.sazabi.util
 
-import net.liftweb.json._
+import org.json4s.{JNothing, JObject, JValue}
+import org.json4s.native.JsonMethods.{compact, render}
 
 import _root_.scalaz._
 import std.option._
@@ -31,8 +32,8 @@ package object json {
 
   def field[A: Reads](name: String)(j: JValue): Result[A] = j match {
     case JObject(fields) => {
-      fields.find(_.name === name)
-        .map(f => implicitly[Reads[A]].read(f.value))
+      fields.find(_._1 === name)
+        .map(tuple => implicitly[Reads[A]].read(tuple._2))
         .orElse(implicitly[Reads[A]].read(JNothing)
           .fold(_ => none, r => r.success.some))
         .getOrElse("field '%s' is not found in %s".format(name, j).wrapNel.failure)

@@ -2,18 +2,18 @@ import sbt._
 import Keys._
 
 object UtilBuild extends Build {
-  val utilVersion = "6.0.1"
+  val utilVersion = "6.0.3"
 
-  val finagleVersion = "6.0.1"
+  val finagleVersion = "6.0.2"
 
   val ostrichVersion = "9.0.2"
 
   val querulousVersion = "3.0.3"
 
-  val scalazVersion = "7.0.0-M5"
+  val scalazVersion = "7.0.0-M6"
 
   val sharedSettings = Seq(
-    version := "0.3.0",
+    version := "0.4.0",
     organization := "org.sazabi",
     scalaVersion := "2.9.2",
     scalacOptions ++= Seq(
@@ -83,7 +83,7 @@ object UtilBuild extends Build {
   ).settings(
     name := "util-json",
     libraryDependencies ++= Seq(
-      "net.liftweb" % "lift-json_2.9.1" % "2.4" % "compile",
+      "org.json4s" %% "json4s-native" % "3.0.0" % "compile",
       "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
     )
   )

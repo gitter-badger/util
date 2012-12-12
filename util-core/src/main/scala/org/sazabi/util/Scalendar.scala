@@ -2,7 +2,7 @@ package org.sazabi.util
 
 import java.text.SimpleDateFormat
 
-import net.liftweb.json.{JInt, JValue}
+import org.json4s.{JInt, JValue}
 
 import org.sazabi.util.json.{Formats, Result}
 

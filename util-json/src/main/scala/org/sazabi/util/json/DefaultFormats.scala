@@ -1,6 +1,6 @@
 package org.sazabi.util.json
 
-import net.liftweb.json._
+import org.json4s._
 
 import scalaz._
 import std.option._

@@ -2,8 +2,8 @@ package org.sazabi.util
 
 import com.twitter.util.{Return, Throw, Try}
 
-import net.liftweb.json.{JInt, JString, JValue}
-import net.liftweb.json.JsonDSL._
+import org.json4s.{JInt, JString, JValue}
+import org.json4s.JsonDSL._
 
 import org.sazabi.util.json.{Formats, Result}
 
