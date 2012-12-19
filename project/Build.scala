@@ -2,11 +2,11 @@ import sbt._
 import Keys._
 
 object UtilBuild extends Build {
-  val utilVersion = "6.0.3"
+  val utilVersion = "6.0.4"
 
-  val finagleVersion = "6.0.2"
+  val finagleVersion = "6.0.3"
 
-  val ostrichVersion = "9.0.2"
+  val ostrichVersion = "9.0.4"
 
   val querulousVersion = "3.0.3"
 
