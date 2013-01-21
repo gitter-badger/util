@@ -48,6 +48,6 @@ package object json {
     def zero: JValue = JNothing
 
     override def show(a: JValue): Cord =
-      a.toOpt.fold(j => Cord(compact(render(j))), Cord())
+      a.toOption.fold(j => Cord(compact(render(j))), Cord())
   }
 }

@@ -10,10 +10,10 @@ object UtilBuild extends Build {
 
   val querulousVersion = "3.0.3"
 
-  val scalazVersion = "7.0.0-M6"
+  val scalazVersion = "7.0.0-M7"
 
   val sharedSettings = Seq(
-    version := "0.4.1",
+    version := "0.4.2",
     organization := "org.sazabi",
     scalaVersion := "2.9.2",
     scalacOptions ++= Seq(
@@ -43,7 +43,7 @@ object UtilBuild extends Build {
   ).settings(
     name := "util-core",
     libraryDependencies ++= Seq(
-      "com.github.philcali" %% "scalendar" % "0.1.3" % "compile",
+      "com.github.philcali" %% "scalendar" % "0.1.4" % "compile",
       "com.twitter" % "util-core" % utilVersion % "compile",
       "io.netty" % "netty" % "3.5.9.Final" % "compile"
     )
@@ -62,7 +62,7 @@ object UtilBuild extends Build {
   ).dependsOn(core)
 
   // Id generator
-  lazy val id = Project(
+  lay val id = Project(
     "util-id",
     file("util-id"),
     settings = Project.defaultSettings ++
@@ -83,7 +83,7 @@ object UtilBuild extends Build {
   ).settings(
     name := "util-json",
     libraryDependencies ++= Seq(
-      "org.json4s" %% "json4s-native" % "3.0.0" % "compile",
+      "org.json4s" %% "json4s-native" % "3.1.0" % "compile",
       "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
     )
   )

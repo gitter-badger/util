@@ -13,72 +13,104 @@ import syntax.std.list._
 
 object DefaultFormats {
   implicit val booleanFormats: Formats[Boolean] = new Formats[Boolean] {
-    def read(j: JValue): Result[Boolean] = j match {
+    def read(json: JValue): Result[Boolean] = json match {
       case JBool(b) => Success(b)
       case JInt(n) => Success(n.longValue >= 0L)
+      case JDecimal(d) => Success(d.doubleValue > 0d)
       case JDouble(d) => Success(d > 0d)
       case JString(s) if s === "true" || s === "1" => Success(true)
       case JString(s) if s === "false" || s === "0"  => Success(false)
-      case _ => "Expected a json boolean but %s".format(j.toString).wrapNel.failure
+      case j => "Can't convert %s to Boolean".format(j).failNel
     }
 
     def write(b: Boolean): Result[JValue] = Success(JBool(b))
   }
 
   implicit val intFormats: Formats[Int] = new Formats[Int] {
-    def read(j: JValue): Result[Int] = j match {
-      case JString(str) => try (Success(str.toInt)) catch {
-        case e => "Expected a number value but %s".format(j.toString).wrapNel.failure
+    def read(json: JValue): Result[Int] = json match {
+      case j @ JString(str) => try (Success(str.toInt)) catch {
+        case _ => "Can't convert %s to Int".format(j).failNel
       }
-      case JInt(num) => Success(num.intValue)
-      case _ => "Expected a json number but %s".format(j.toString).wrapNel.failure
+      case JInt(i) => Success(i.intValue)
+      case JDecimal(d) => Success(d.intValue)
+      case JDouble(d) => Success(d.intValue)
+      case j => "Can't convert %s to Int".format(j).failNel
     }
 
     def write(n: Int): Result[JValue] = Success(JInt(n))
   }
 
   implicit val longFormats: Formats[Long] = new Formats[Long] {
-    def read(j: JValue): Result[Long] = j match {
-      case JString(str) => try (str.toLong.success) catch {
-        case e => "Expected a number value but %s".format(j.toString).wrapNel.failure
+    def read(json: JValue): Result[Long] = json match {
+      case j @ JString(str) => try (str.toLong.success) catch {
+        case _ => "Can't convert %s to Long".format(j).failNel
       }
-      case JInt(num) => num.longValue.success
-      case _ => "Expected a json number but %s".format(j.toString).wrapNel.failure
+      case JInt(i) => Success(i.longValue)
+      case JDecimal(d) => Success(d.longValue)
+      case JDouble(d) => Success(d.longValue)
+      case j => "Can't convert %s to Long".format(j).failNel
     }
 
     def write(n: Long): Result[JValue] = JInt(n).success
   }
 
   implicit val floatFormats: Formats[Float] = new Formats[Float] {
-    def read(j: JValue): Result[Float] = j match {
-      case JString(str) => try (str.toFloat.success) catch {
-        case e => "Expected a floating number value but %s".format(j.toString).wrapNel.failure
+    def read(json: JValue): Result[Float] = json match {
+      case j @ JString(str) => try (str.toFloat.success) catch {
+        case _ => "Can't convert %s to Float".format(j).failNel
       }
-      case JDouble(num) => num.floatValue.success
-      case _ => "Expected a json floating number but %s".format(j.toString).wrapNel.failure
+      case JInt(i) => Success(i.floatValue)
+      case JDecimal(d) => Success(d.floatValue)
+      case JDouble(d) => Success(d.floatValue)
+      case j => "Can't convert %s to Float".format(j).failNel
     }
 
     def write(n: Float): Result[JValue] = JDouble(n).success
   }
 
   implicit val doubleFormats: Formats[Double] = new Formats[Double] {
-    def read(j: JValue): Result[Double] = j match {
-      case JString(str) => try (str.toDouble.success) catch {
-        case e => "Expected a floating number value but %s".format(j.toString).wrapNel.failure
+    def read(json: JValue): Result[Double] = json match {
+      case j @ JString(str) => try (str.toDouble.success) catch {
+        case _ => "Can't convert %s to Double".format(j).failNel
       }
-      case JDouble(num) => num.success
-      case _ => "Expected a json floating number but %s".format(j.toString).wrapNel.failure
+      case JInt(i) => i.doubleValue.success
+      case JDecimal(d) => d.doubleValue.success
+      case JDouble(d) => d.success
+      case j => "Can't convert %s to Double".format(j).failNel
     }
 
     def write(n: Double): Result[JValue] = JDouble(n).success
   }
 
+  implicit val bigIntFormats: Formats[BigInt] = new Formats[BigInt] {
+    def read(json: JValue): Result[BigInt] = json match {
+      case JInt(i) => i.success
+      case JDouble(d) => BigInt(d.longValue).success
+      case JDecimal(d) => d.toBigInt().success
+      case j => "Can't convert %s to BigInt".format(j).failNel
+    }
+
+    def write(i: BigInt): Result[JValue] = JInt(i).success
+  }
+
+  implicit val bigDecimalFormats: Formats[BigDecimal] = new Formats[BigDecimal] {
+    def read(json: JValue): Result[BigDecimal] = json match {
+      case JInt(i) => BigDecimal(i).success
+      case JDouble(d) => BigDecimal(d).success
+      case JDecimal(d) => d.success
+      case j => "Can't convert %s to BigDecimal".format(j).failNel
+    }
+
+    def write(d: BigDecimal): Result[JValue] = JDecimal(d).success
+  }
+
   implicit val stringFormats: Formats[String] = new Formats[String] {
-    def read(j: JValue): Result[String] = j match {
+    def read(json: JValue): Result[String] = json match {
       case JString(str) => str.success
-      case JInt(num) => num.toString.success
-      case JDouble(num) => num.toString.success
-      case _ => "Expected json string but %s".format(j.toString).wrapNel.failure
+      case JInt(i) => i.toString.success
+      case JDouble(d) => d.toString.success
+      case JDecimal(d) => d.toString.success
+      case j => "Can't convert %s to String".format(j).failNel
     }
 
     def write(s: String): Result[JValue] = JString(s).success
