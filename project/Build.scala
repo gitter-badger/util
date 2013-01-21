@@ -62,7 +62,7 @@ object UtilBuild extends Build {
   ).dependsOn(core)
 
   // Id generator
-  lazy val id = Project(
+  lay val id = Project(
     "util-id",
     file("util-id"),
     settings = Project.defaultSettings ++
