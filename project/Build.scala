@@ -13,7 +13,7 @@ object UtilBuild extends Build {
   val scalazVersion = "7.0.0-M7"
 
   val sharedSettings = Seq(
-    version := "0.5.0-SNAPSHOT",
+    version := "0.4.2",
     organization := "org.sazabi",
     scalaVersion := "2.9.2",
     scalacOptions ++= Seq(
@@ -62,7 +62,7 @@ object UtilBuild extends Build {
   ).dependsOn(core)
 
   // Id generator
-  lazy val id = Project(
+  lay val id = Project(
     "util-id",
     file("util-id"),
     settings = Project.defaultSettings ++
