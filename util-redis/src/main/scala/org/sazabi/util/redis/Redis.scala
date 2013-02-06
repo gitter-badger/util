@@ -10,6 +10,7 @@ import com.twitter.finagle.redis.{Redis => FR, ServerError}
 import com.twitter.finagle.redis.protocol.{Command, Reply}
 import com.twitter.finagle.stats.OstrichStatsReceiver
 import com.twitter.finagle.Service
+import com.twitter.ostrich.stats.Stats
 import com.twitter.util.Future
 
 import java.net.InetSocketAddress
@@ -29,7 +30,7 @@ abstract class Redis(hosts: String, db: Int) {
     .hostConnectionLimit(1)
     .tcpConnectTimeout(3000.milliseconds)
     .retries(2)
-    .reportTo(new OstrichStatsReceiver)
+    .reportTo(new OstrichStatsReceiver(Stats))
     .build()
 
   def withClient[A](f: Client => Future[A]): Future[A] =

@@ -16,16 +16,16 @@ import syntax.validation._
  * Enumeration with identified by id.
  */
 trait EnumerateById { self: Enumeration =>
-  lazy val expected: SortedSet[Int] = values.ids
+  lazy val expected: SortedSet[Int] = values map(_.id)
 
   /** sjson Format. */
   implicit lazy val valueFormats: Formats[Value] = new Formats[Value] {
     def read(json: JValue): Result[Value] = json match {
       case JInt(num) => try(apply(num.intValue).success) catch {
-        case _ => ("Expected " + expected.mkString(" or ")).failureNel
+        case _: Throwable => ("Expected " + expected.mkString(" or ")).failureNel
       }
       case JString(v) => try(apply(v.toInt).success) catch {
-        case _ => ("Expected " + expected.mkString(" or ")).failureNel
+        case _: Throwable => ("Expected " + expected.mkString(" or ")).failureNel
       }
       case _ => ("Expected number or string").failureNel
     }
@@ -45,10 +45,10 @@ trait EnumerateByName { self: Enumeration =>
   implicit lazy val valueFormats: Formats[Value] = new Formats[Value] {
     def read(json: JValue): Result[Value] = json match {
       case JInt(num) => try(withName(num.toString).success) catch {
-        case _ => ("Expected " + expected.mkString(" or ")).failureNel
+        case _: Throwable => ("Expected " + expected.mkString(" or ")).failureNel
       }
       case JString(name) => try(withName(name).success) catch {
-        case _ => ("Expected " + expected.mkString(" or ")).failureNel
+        case _: Throwable => ("Expected " + expected.mkString(" or ")).failureNel
       }
       case _ => ("Expected number or string").failureNel
     }

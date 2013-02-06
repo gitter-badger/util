@@ -7,4 +7,7 @@ import scalaz._
  */
 package object util {
   type -->[A, B] = PartialFunction[A, B]
+
+  private[util] sealed trait Base58Encoded
+  type Base58String = String @@ Base58Encoded
 }

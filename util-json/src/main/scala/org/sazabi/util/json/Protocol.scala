@@ -1,7 +1,7 @@
 package org.sazabi.util.json
 
 import org.json4s.{JObject, JValue}
-import org.json4s.JsonDSL.{jobject2assoc, pair2Assoc}
+import org.json4s.JsonDSL.{jobject2assoc, pair2jvalue, pair2Assoc}
 
 import scalaz._
 import syntax.applicative._
@@ -9,6 +9,22 @@ import syntax.id._
 import syntax.validation._
 
 trait Protocol {
+  def asProduct1[A, V](v: String)
+      (apply: V => A)(unapply: A => V)
+      (implicit vf: Formats[V]): Formats[A] = new Formats[A] {
+    def read(js: JValue): Result[A] = js match {
+      case j @ JObject(_) => {
+        Apply[Result].apply(field[V](v)(j))(apply)
+      }
+      case _ => "Object expected".wrapNel.failure
+    }
+
+    def write(a: A): Result[JValue] = {
+      val p = unapply(a)
+      pair2jvalue(v -> toJson(p)).success
+    }
+  }
+
   def asProduct2[A, V1, V2](v1: String, v2: String)
       (apply: (V1, V2) => A)(unapply: A => Product2[V1, V2])
       (implicit v1f: Formats[V1], v2f: Formats[V2]): Formats[A] = new Formats[A] {

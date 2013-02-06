@@ -184,7 +184,7 @@ trait Lock extends Serialized {
       }
     }
 
-    findPreviousNode(base, node) flatMap (_.fold(watch, {
+    findPreviousNode(base, node) flatMap (_.cata(watch, {
       log.ifDebug("Now [%s] got current lock".format(node))
       Future(f)
     }))
