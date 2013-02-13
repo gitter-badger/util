@@ -13,16 +13,20 @@ import syntax.id._
 import syntax.std.boolean._
 import syntax.validation._
 
+class BitSetOps(val value: BitSet) extends AnyVal {
+  def toInt: Int = value.foldLeft(0)((x, y) => x | (value(y) ? 1 | 0) << y)
+  def toLong: Long = value.foldLeft(0L)((x, y) => x | (value(y) ? 1L | 0L) << y)
+}
+
+trait ToBitSetOps {
+  implicit val toBitSetOps: BitSet => BitSetOps = new BitSetOps(_)
+}
+
 /**
  * A pimped trait for BitSet.
  */
-trait BitSets {
-  implicit class BitSetOps(self: BitSet) {
-    def toInt: Int = self.foldLeft(0)((x, y) => x | (self(y) ? 1 | 0) << y)
-    def toLong: Long = self.foldLeft(0L)((x, y) => x | (self(y) ? 1L | 0L) << y)
-  }
-
-  implicit lazy val bitSetFormat: Formats[BitSet] = new Formats[BitSet] {
+trait BitSetTypeClasses {
+  implicit lazy val bitSetJsonFormats: Formats[BitSet] = new Formats[BitSet] {
     def read(json: JValue): Result[BitSet] = json match {
       case JInt(n) => BitSet.fromBitMask(Array(n.longValue)).success
       case JArray(arr) => {
@@ -38,18 +42,20 @@ trait BitSets {
     }
 
     def write(v: BitSet): Result[JValue] = {
-      JInt(v.toLong).success
+      JInt(new BitSetOps(v).toLong).success
     }
   }
 
-  implicit lazy val bitSetInstance: Monoid[BitSet] with Show[BitSet] with Equal[BitSet] =
-      new Monoid[BitSet] with Show[BitSet] with Equal[BitSet] {
+  implicit lazy val bitSetScalazInstance:
+    Monoid[BitSet] with Show[BitSet] with Order[BitSet] =
+      new Monoid[BitSet] with Show[BitSet] with Order[BitSet] {
     def zero: BitSet = BitSet.empty
 
     def append(f1: BitSet, f2: => BitSet): BitSet = f1 ++ f2
 
     override def show(f: BitSet): Cord = Cord(f mkString ",")
 
-    def equal(f1: BitSet, f2: BitSet): Boolean = f1.toLong === f2.toLong
+    def order(f1: BitSet, f2: BitSet): Ordering =
+      Order[Long].order(new BitSetOps(f1).toLong, new BitSetOps(f2).toLong)
   }
 }

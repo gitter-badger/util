@@ -1,4 +1,4 @@
-package org.sazabi.util
+package org.sazabi.util.codec
 
 import org.specs2._
 

@@ -2,8 +2,6 @@ package org.sazabi.util.redis
 
 import Imports._
 
-import org.sazabi.util.AsyncPool
-
 import com.twitter.conversions.time._
 import com.twitter.finagle.builder.ClientBuilder
 import com.twitter.finagle.redis.{Redis => FR, ServerError}
@@ -11,7 +9,7 @@ import com.twitter.finagle.redis.protocol.{Command, Reply}
 import com.twitter.finagle.stats.OstrichStatsReceiver
 import com.twitter.finagle.Service
 import com.twitter.ostrich.stats.Stats
-import com.twitter.util.Future
+import com.twitter.util.{Future, FuturePool}
 
 import java.net.InetSocketAddress
 
@@ -22,7 +20,7 @@ import syntax.functor._
  * Redis instance for a single redis node.
  */
 abstract class Redis(hosts: String, db: Int) {
-  protected def asyncPool: AsyncPool
+  protected def futurePool: FuturePool
 
   protected def service(): Service[Command, Reply] = ClientBuilder()
     .codec(FR())
@@ -40,11 +38,11 @@ abstract class Redis(hosts: String, db: Int) {
 
   def apply[A](f: Client => A): Future[A] =
     newClient() flatMap { c =>
-      asyncPool(f(c)) ensure { c.release() }
+      futurePool(f(c)) ensure { c.release() }
     }
 
   def newClient(): Future[Client] =
-    asyncPool(new Client(service())) flatMap { c =>
+    futurePool(new Client(service())) flatMap { c =>
       c.select(db) >| c
     }
 }
