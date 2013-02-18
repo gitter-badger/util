@@ -1,7 +1,5 @@
 package org.sazabi.util
 
-import com.twitter.util.{Return, Throw, Try}
-
 import org.json4s.{JInt, JString, JValue}
 import org.json4s.JsonDSL._
 

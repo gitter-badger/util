@@ -67,7 +67,7 @@ trait Lock extends Serialized {
         cleanup(node)
       }
     }
-  } flatten
+  }.flatten
 
   /**
    * Lock with timeout.
@@ -149,7 +149,7 @@ trait Lock extends Serialized {
         case n @ LockNodeName(i, k, s) if s < seq => (s, n)
       } sortBy(_._1)).lastOption.map(_._2)
     }
-  } flatten
+  }.flatten
 
   /**
    * Check for lock.
@@ -222,9 +222,9 @@ trait Lock extends Serialized {
       val parts = name.split(Separator).toList
       parts match {
         case id :: key :: Nil if key === lockKey =>
-          Try((id.toLong, key, "")) toOption
+          Try((id.toLong, key, "")).toOption
         case nodeId :: key :: seq :: Nil if key === lockKey =>
-          Try((nodeId.toLong, key, seq)) toOption
+          Try((nodeId.toLong, key, seq)).toOption
         case _ => none
       }
     }

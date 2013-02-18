@@ -1,4 +1,4 @@
-package org.sazabi.util
+package org.sazabi.util.twitter
 
 import com.twitter.util.{Future, Return, Throw, Try}
 
@@ -7,7 +7,7 @@ import scalaz._
 /**
  * A pimped trait for Try[A].
  */
-trait TryP[A] extends Pimped[Try[A]] {
+class TryOps[A](val value: Try[A]) extends AnyVal {
   /**
    * Converts to Future[A].
    */
@@ -22,12 +22,12 @@ trait TryP[A] extends Pimped[Try[A]] {
   }
 }
 
-trait Trys {
-  implicit def toTryP[A](v: Try[A]): TryP[A] = new TryP[A] {
-    val value = v
-  }
+trait ToTryOps {
+  implicit def toTryOps[A]: Try[A] => TryOps[A] = new TryOps(_)
+}
 
-  implicit val TryInstance: Monad[Try] = new Monad[Try] {
+trait TryTypeClasses {
+  implicit val scalazTryInstance: Monad[Try] = new Monad[Try] {
     def point[A](a: => A): Try[A] = Try(a)
     def bind[A, B](fa: Try[A])(f: A => Try[B]): Try[B] = fa flatMap f
   }

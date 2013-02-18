@@ -12,7 +12,7 @@ import syntax.validation._
 
 import scalendar._
 
-trait Scalendars {
+trait ScalendarTypeClasses {
   /**
    * A thread-local SimpleDateFormat for date and time.
    */
@@ -25,29 +25,17 @@ trait Scalendars {
    */
   implicit def datetimeFormat: SimpleDateFormat = localDatetimeFormat.get
 
-  /**
-   * A thread-local SimpleDateFormat for date only.
-   */
-  private val localDateFormat = new java.lang.ThreadLocal[SimpleDateFormat] {
-    protected override def initialValue() = Pattern("yyyy-MM-dd")
-  }
+  implicit val scalendarOrderInstance: Order[Scalendar] = Order.orderBy(_.time)
 
-  /**
-   * Implicitly returns a thread-local SimpleDateFormat.
-   */
-  def dateFormat: SimpleDateFormat = localDateFormat.get
-
-  // Type classes for scalaz.
-  implicit val scalendarOrder: Order[Scalendar] = Order.orderBy(_.time)
-  implicit val scalendarShow: Show[Scalendar] =
+  implicit val scalendarShowInstance: Show[Scalendar] =
     Show.show(cal => Cord(datetimeFormat.format(cal.time)))
 
-  implicit val scalendarFormats: Formats[Scalendar] = new Formats[Scalendar] {
-    def read(json: JValue): Result[Scalendar] = json match {
+  implicit val scalendarFormatsInstance: Formats[Scalendar] = {
+    Formats {
       case JInt(num) => Scalendar(num.longValue).success
       case _ => "Expected a long value as milliseconds from epoch".failureNel
+    } {
+      case scal => JInt(scal.time).success
     }
-
-    def write(a: Scalendar): Result[JValue] = JInt(a.time).success
   }
 }

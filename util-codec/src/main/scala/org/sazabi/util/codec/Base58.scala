@@ -1,4 +1,4 @@
-package org.sazabi.util
+package org.sazabi.util.codec
 
 import com.twitter.util.Codec
 
@@ -15,15 +15,10 @@ object Base58 extends Codec[Array[Byte], Base58String] {
 
   private val Base58Size = Base58Chars.size
 
-  def toBase58String(bytes: Array[Byte]): Base58String = encode(bytes)
-
-  def fromBase58String(bs: Base58String): Array[Byte] = decode(bs)
-
-  def validateBase58String(str: String): \/[Throwable, Base58String] =
-    \/.fromTryCatch {
-      val bs = Tag[String, Base58Encoded](str)
-      encode(decode(bs))
-    }
+  def validate(str: String): \/[Throwable, Base58String] = \/.fromTryCatch {
+    val bs = Tag[String, Base58Encoded](str)
+    encode(decode(bs))
+  }
 
   override def encode(bytes: Array[Byte]): Base58String = {
     val bi = BigInt(1, bytes)
