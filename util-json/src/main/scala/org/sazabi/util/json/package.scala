@@ -18,11 +18,31 @@ package object json {
     def read(j: JValue): Result[A]
   }
 
+  object Reads {
+    def apply[A](f: JValue => Result[A]): Reads[A] = new Reads[A] {
+      def read(j: JValue) = f(j)
+    }
+  }
+
   trait Writes[A] {
     def write(a: A): Result[JValue]
   }
 
+  object Writes {
+    def apply[A](f: A => Result[JValue]): Writes[A] = new Writes[A] {
+      def write(v: A) = f(v)
+    }
+  }
+
   trait Formats[A] extends Reads[A] with Writes[A]
+
+  object Formats {
+    def apply[A](r: JValue => Result[A])(w: A => Result[JValue]): Formats[A] =
+      new Formats[A] {
+        def read(j: JValue) = r(j)
+        def write(v: A) = w(v)
+      }
+  }
 
   def toJson[A: Writes](a: A): JValue =
     implicitly[Writes[A]].write(a).fold(nel => JNothing, identity)
@@ -48,6 +68,6 @@ package object json {
     def zero: JValue = JNothing
 
     override def show(a: JValue): Cord =
-      a.toOption.fold(j => Cord(compact(render(j))), Cord())
+      a.toOption.cata(j => Cord(compact(render(j))), Cord())
   }
 }

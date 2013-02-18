@@ -2,27 +2,29 @@ import sbt._
 import Keys._
 
 object UtilBuild extends Build {
-  val utilVersion = "6.0.4"
+  val utilVersion = "6.2.0"
 
-  val finagleVersion = "6.0.3"
+  val finagleVersion = "6.2.0"
 
-  val ostrichVersion = "9.0.4"
-
-  val querulousVersion = "3.0.3"
+  val ostrichVersion = "9.1.0"
 
   val scalazVersion = "7.0.0-M7"
 
   val sharedSettings = Seq(
-    version := "0.4.2",
+    version := "0.5.0",
     organization := "org.sazabi",
-    scalaVersion := "2.9.2",
+    scalaVersion := "2.10.0",
     scalacOptions ++= Seq(
       "-unchecked",
-      "-deprecation"
+      "-deprecation",
+      "-feature"
     ),
     resolvers ++= Seq(
       Resolver.url("My github releases", url("http://solar.github.com/ivy2/releases/"))(Resolver.ivyStylePatterns),
       "twitter" at "http://maven.twttr.com"
+    ),
+    libraryDependencies ++= Seq(
+      "org.specs2" %% "specs2" % "1.13" % "test"
     )
   )
 
@@ -30,10 +32,24 @@ object UtilBuild extends Build {
     "util-all",
     file("."),
     settings = Project.defaultSettings ++ Seq(
+      scalaVersion := "2.10.0",
       publish := {},
       publishLocal := {}
     )
-  ).aggregate(core, finagleHttp, id, json, querulous, redis, zk)
+  ).aggregate(codec, core, finagleHttp, id, json, netty, redis, twitter, zk)
+
+  // Codecs
+  lazy val codec = Project(
+    "util-codec",
+    file("util-codec"),
+    settings = Project.defaultSettings ++ sharedSettings
+  ).settings(
+    name := "util-codec",
+    libraryDependencies ++= Seq(
+      "com.twitter" %% "util-core" % utilVersion % "compile",
+      "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
+    )
+  )
 
   // Core utilities
   lazy val core = Project(
@@ -44,8 +60,7 @@ object UtilBuild extends Build {
     name := "util-core",
     libraryDependencies ++= Seq(
       "com.github.philcali" %% "scalendar" % "0.1.4" % "compile",
-      "com.twitter" % "util-core" % utilVersion % "compile",
-      "io.netty" % "netty" % "3.5.9.Final" % "compile"
+      "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
     )
   ).dependsOn(json)
 
@@ -57,7 +72,7 @@ object UtilBuild extends Build {
   ).settings(
     name := "util-finagle-http",
     libraryDependencies ++= Seq(
-      "com.twitter" % "finagle-http" % finagleVersion % "compile"
+      "com.twitter" %% "finagle-http" % finagleVersion % "compile"
     )
   ).dependsOn(core)
 
@@ -70,8 +85,8 @@ object UtilBuild extends Build {
   ).settings(
     name := "util-id",
     libraryDependencies ++= Seq(
-      "com.twitter" % "util-logging" % utilVersion % "compile",
-      "com.twitter" % "ostrich" % ostrichVersion % "compile"
+      "com.twitter" %% "util-logging" % utilVersion % "compile",
+      "com.twitter" %% "ostrich" % ostrichVersion % "compile"
     )
   )
 
@@ -88,18 +103,17 @@ object UtilBuild extends Build {
     )
   )
 
-  // Database using querulous
-  lazy val querulous = Project(
-    "util-querulous",
-    file("util-querulous"),
+  // netty
+  lazy val netty = Project(
+    "util-netty",
+    file("util-netty"),
     settings = Project.defaultSettings ++ sharedSettings
   ).settings(
-    name := "util-querulous",
+    name := "util-netty",
     libraryDependencies ++= Seq(
-      "com.twitter" % "querulous-core" % querulousVersion % "compile",
-      "com.twitter" % "querulous-ostrich4" % querulousVersion % "compile"
+      "io.netty" % "netty" % "3.5.5.Final" % "compile"
     )
-  ).dependsOn(core)
+  )
 
   // Redis
   lazy val redis = Project(
@@ -109,10 +123,25 @@ object UtilBuild extends Build {
   ).settings(
     name := "util-redis",
     libraryDependencies ++= Seq(
-      "com.twitter" % "finagle-ostrich4" % finagleVersion % "compile",
-      "com.twitter" % "finagle-redis" % finagleVersion % "compile"
+      "com.twitter" %% "finagle-ostrich4" % finagleVersion % "compile",
+      "com.twitter" %% "finagle-redis" % finagleVersion % "compile",
+      "com.twitter" %% "util-core" % utilVersion % "compile",
+      "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
     )
-  ).dependsOn(core)
+  ).dependsOn(twitter)
+
+  // twitter util
+  lazy val twitter = Project(
+    "util-twitter",
+    file("util-twitter"),
+    settings = Project.defaultSettings ++ sharedSettings
+  ).settings(
+    name := "util-twitter",
+    libraryDependencies ++= Seq(
+      "com.twitter" %% "util-core" % utilVersion % "compile",
+      "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
+    )
+  )
 
   // zookeeper
   lazy val zk = Project(
@@ -122,7 +151,10 @@ object UtilBuild extends Build {
   ).settings(
     name := "util-zk",
     libraryDependencies ++= Seq(
-      "com.twitter" % "util-zk" % utilVersion % "compile",
+      "com.twitter" %% "util-zk" % utilVersion % "compile" excludeAll(
+        ExclusionRule(organization = "com.sun.jdmk"),
+        ExclusionRule(organization = "com.sun.jmx"),
+        ExclusionRule(organization = "javax.jms")),
       "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
     )
   )
