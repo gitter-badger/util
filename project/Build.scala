@@ -8,12 +8,12 @@ object UtilBuild extends Build {
 
   val ostrichVersion = "9.1.0"
 
-  val scalazVersion = "7.0.0-M7"
+  val scalazVersion = "7.0.0-M9"
 
   val sharedSettings = Seq(
     version := "0.6.0-SNAPSHOT",
     organization := "org.sazabi",
-    scalaVersion := "2.10.0",
+    scalaVersion := "2.10.1",
     scalacOptions ++= Seq(
       "-unchecked",
       "-deprecation",
@@ -24,7 +24,7 @@ object UtilBuild extends Build {
       "twitter" at "http://maven.twttr.com"
     ),
     libraryDependencies ++= Seq(
-      "org.specs2" %% "specs2" % "1.13" % "test"
+      "org.specs2" %% "specs2" % "1.14" % "test"
     )
   )
 
@@ -98,6 +98,7 @@ object UtilBuild extends Build {
   ).settings(
     name := "util-json",
     libraryDependencies ++= Seq(
+      "com.twitter" %% "util-core" % utilVersion % "compile",
       "org.json4s" %% "json4s-native" % "3.1.0" % "compile",
       "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
     )
