@@ -62,7 +62,7 @@ trait Lock extends Serialized {
    * Lock.
    */
   def apply[A](f: => A): Future[A] = serialized {
-    ensureNode(base) flatMap(createLockNode) flatMap { node =>
+    Zk.ensureNode(client, base) flatMap(createLockNode) flatMap { node =>
       checkForLock(base, node, f) ensure {
         cleanup(node)
       }
@@ -75,31 +75,6 @@ trait Lock extends Serialized {
    */
   def withTimeout[A](timeout: Duration)(f: => A): Future[A] = serialized {
     throw new Exception("Not implemented!")
-  }
-
-  /**
-   * Ensure base/parent nodes hierarchy.
-   */
-  private def ensureNode(node: ZNode): Future[ZNode] = {
-    node.exists() rescue {
-      case e: KeeperException.NoNodeException => {
-        log.ifDebug("%s is not exists".format(node))
-        ensureNode(node.parent) flatMap { parent =>
-          log.ifDebug("Creating %s".format(node))
-          node.create()
-        } rescue {
-          case e: KeeperException.NodeExistsException => Future.value(node)
-          case e => {
-            log.error(e, "Unexpected exception in ensureNode()")
-            Future.rawException(LockNodeUnavailable(e))
-          }
-        }
-      }
-      case e => {
-        log.error(e, "Unexpected exception in ensureNode()")
-        Future.rawException(LockNodeUnavailable(e))
-      }
-    }
   }
 
   /**

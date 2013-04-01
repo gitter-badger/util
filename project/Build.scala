@@ -2,9 +2,9 @@ import sbt._
 import Keys._
 
 object UtilBuild extends Build {
-  val utilVersion = "6.2.0"
+  val utilVersion = "6.2.4"
 
-  val finagleVersion = "6.2.0"
+  val finagleVersion = "6.2.1"
 
   val ostrichVersion = "9.1.0"
 
@@ -32,7 +32,7 @@ object UtilBuild extends Build {
     "util-all",
     file("."),
     settings = Project.defaultSettings ++ Seq(
-      scalaVersion := "2.10.0",
+      scalaVersion := "2.10.1",
       publish := {},
       publishLocal := {}
     )
@@ -99,7 +99,7 @@ object UtilBuild extends Build {
     name := "util-json",
     libraryDependencies ++= Seq(
       "com.twitter" %% "util-core" % utilVersion % "compile",
-      "org.json4s" %% "json4s-native" % "3.1.0" % "compile",
+      "org.json4s" %% "json4s-native" % "3.2.3" % "compile",
       "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
     )
   )
@@ -112,7 +112,7 @@ object UtilBuild extends Build {
   ).settings(
     name := "util-netty",
     libraryDependencies ++= Seq(
-      "io.netty" % "netty" % "3.5.5.Final" % "compile"
+      "io.netty" % "netty" % "3.5.12.Final" % "compile"
     )
   )
 
