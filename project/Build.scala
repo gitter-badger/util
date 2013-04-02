@@ -2,18 +2,18 @@ import sbt._
 import Keys._
 
 object UtilBuild extends Build {
-  val utilVersion = "6.2.0"
+  val utilVersion = "6.2.4"
 
-  val finagleVersion = "6.2.0"
+  val finagleVersion = "6.2.1"
 
   val ostrichVersion = "9.1.0"
 
-  val scalazVersion = "7.0.0-M7"
+  val scalazVersion = "7.0.0-M9"
 
   val sharedSettings = Seq(
-    version := "0.5.0",
+    version := "0.6.0",
     organization := "org.sazabi",
-    scalaVersion := "2.10.0",
+    scalaVersion := "2.10.1",
     scalacOptions ++= Seq(
       "-unchecked",
       "-deprecation",
@@ -24,7 +24,7 @@ object UtilBuild extends Build {
       "twitter" at "http://maven.twttr.com"
     ),
     libraryDependencies ++= Seq(
-      "org.specs2" %% "specs2" % "1.13" % "test"
+      "org.specs2" %% "specs2" % "1.14" % "test"
     )
   )
 
@@ -32,7 +32,7 @@ object UtilBuild extends Build {
     "util-all",
     file("."),
     settings = Project.defaultSettings ++ Seq(
-      scalaVersion := "2.10.0",
+      scalaVersion := "2.10.1",
       publish := {},
       publishLocal := {}
     )
@@ -98,7 +98,8 @@ object UtilBuild extends Build {
   ).settings(
     name := "util-json",
     libraryDependencies ++= Seq(
-      "org.json4s" %% "json4s-native" % "3.1.0" % "compile",
+      "com.twitter" %% "util-core" % utilVersion % "compile",
+      "org.json4s" %% "json4s-native" % "3.2.3" % "compile",
       "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
     )
   )
@@ -111,7 +112,7 @@ object UtilBuild extends Build {
   ).settings(
     name := "util-netty",
     libraryDependencies ++= Seq(
-      "io.netty" % "netty" % "3.5.5.Final" % "compile"
+      "io.netty" % "netty" % "3.5.12.Final" % "compile"
     )
   )
 
