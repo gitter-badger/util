@@ -1,6 +1,8 @@
 import sbt._
 import Keys._
 
+import com.typesafe.sbt.SbtPgp.PgpKeys._
+
 object UtilBuild extends Build {
   val utilVersion = "6.2.4"
 
@@ -19,22 +21,49 @@ object UtilBuild extends Build {
       "-deprecation",
       "-feature"
     ),
-    resolvers ++= Seq(
-      Resolver.url("My github releases", url("http://solar.github.com/ivy2/releases/"))(Resolver.ivyStylePatterns),
-      "twitter" at "http://maven.twttr.com"
-    ),
     libraryDependencies ++= Seq(
       "org.specs2" %% "specs2" % "1.14" % "test"
-    )
+    ),
+    useGpg := true,
+    publishMavenStyle := true,
+    publishTo <<= version { (v: String) =>
+      val nexus = "https://oss.sonatype.org/"
+      if (v.trim.endsWith("SNAPSHOT"))
+        Some("snapshots" at nexus + "content/repositories/snapshots")
+      else
+        Some("releases" at nexus + "service/local/staging/deploy/maven2")
+    },
+    publishArtifact in Test := false,
+    pomIncludeRepository := { _ => false },
+    pomExtra := (
+      <url>https://github.com/solar/util</url>
+      <licenses>
+        <license>
+          <name>Apache 2</name>
+          <url>http://www.apache.org/licenses/LICENSE-2.0.txt"</url>
+          <distribution>repo</distribution>
+        </license>
+      </licenses>
+      <scm>
+        <url>git@github.com:solar/util.git</url>
+        <connection>scm:git:git@github.com:solar/util.git</connection>
+      </scm>
+      <developers>
+        <developer>
+          <id>solar</id>
+          <name>Shinpei Okamura</name>
+          <url>https://github.com/solar</url>
+        </developer>
+      </developers>)
   )
 
   lazy val all = Project(
     "util-all",
     file("."),
-    settings = Project.defaultSettings ++ Seq(
-      scalaVersion := "2.10.1",
+    settings = Project.defaultSettings ++ sharedSettings ++ Seq(
       publish := {},
-      publishLocal := {}
+      publishLocal := {},
+      publishSigned := {}
     )
   ).aggregate(codec, core, finagleHttp, id, json, netty, redis, twitter, zk)
 
