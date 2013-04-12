@@ -3,8 +3,7 @@ package org.sazabi.util
 import java.text.SimpleDateFormat
 
 import org.json4s.{JInt, JValue}
-
-import org.sazabi.util.json.{Formats, Result}
+import org.json4s.scalaz.JsonScalaz._
 
 import scalaz._
 import syntax.id._
@@ -25,17 +24,29 @@ trait ScalendarTypeClasses {
    */
   implicit def datetimeFormat: SimpleDateFormat = localDatetimeFormat.get
 
-  implicit val scalendarOrderInstance: Order[Scalendar] = Order.orderBy(_.time)
+  /**
+   * Implicit instance of scalaz.Order.
+   */
+  implicit val scalendarOrder: Order[Scalendar] = Order.orderBy(_.time)
 
-  implicit val scalendarShowInstance: Show[Scalendar] =
+  /**
+   * Implicit instance of scalaz.Show.
+   */
+  implicit val scalendarShow: Show[Scalendar] =
     Show.show(cal => Cord(datetimeFormat.format(cal.time)))
 
-  implicit val scalendarFormatsInstance: Formats[Scalendar] = {
-    Formats {
-      case JInt(num) => Scalendar(num.longValue).success
-      case _ => "Expected a long value as milliseconds from epoch".failureNel
-    } {
-      case scal => JInt(scal.time).success
-    }
+  /**
+   * Implicit instance of org.json4s.scalaz.JsonScalaz.JSONR.
+   */
+  implicit val scalendarJSONR: JSONR[Scalendar] = Result2JSONR {
+    case JInt(num) => Scalendar(num.longValue).success
+    case j => UnexpectedJSONError(j, classOf[JInt]).failureNel
+  }
+
+  /**
+   * Implicit instance of org.json4s.scalaz.JsonScalaz.JSONW.
+   */
+  implicit val scalendarJSONW: JSONW[Scalendar] = new JSONW[Scalendar] {
+    def write(value: Scalendar): JValue = JInt(value.time)
   }
 }

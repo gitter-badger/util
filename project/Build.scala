@@ -89,9 +89,11 @@ object UtilBuild extends Build {
     name := "util-core",
     libraryDependencies ++= Seq(
       "com.github.philcali" %% "scalendar" % "0.1.4" % "compile",
+      "org.json4s" %% "json4s-native" % "3.2.4" % "compile",
+      "org.json4s" %% "json4s-scalaz" % "3.2.4" % "compile",
       "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
     )
-  ).dependsOn(json)
+  )
 
   // finagle http
   lazy val finagleHttp = Project(
@@ -128,7 +130,8 @@ object UtilBuild extends Build {
     name := "util-json",
     libraryDependencies ++= Seq(
       "com.twitter" %% "util-core" % utilVersion % "compile",
-      "org.json4s" %% "json4s-native" % "3.2.3" % "compile",
+      "org.json4s" %% "json4s-native" % "3.2.4" % "compile",
+      "org.json4s" %% "json4s-scalaz" % "3.2.4" % "compile",
       "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
     )
   )
