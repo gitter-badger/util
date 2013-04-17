@@ -78,6 +78,7 @@ object UtilBuild extends Build {
     name := "util-codec",
     libraryDependencies ++= Seq(
       "com.twitter" %% "util-core" % utilVersion % "compile",
+      "com.twitter" %% "util-codec" % utilVersion % "compile",
       "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
     )
   )
