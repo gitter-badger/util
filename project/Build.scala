@@ -10,7 +10,7 @@ object UtilBuild extends Build {
 
   val ostrichVersion = "9.1.0"
 
-  val scalazVersion = "7.0.0-RC2"
+  val scalazVersion = "7.0.0"
 
   val json4sVersion = "3.2.4"
 
