@@ -4,16 +4,18 @@ import Keys._
 import com.typesafe.sbt.SbtPgp.PgpKeys._
 
 object UtilBuild extends Build {
-  val utilVersion = "6.2.4"
+  val utilVersion = "6.3.0"
 
-  val finagleVersion = "6.2.1"
+  val finagleVersion = "6.3.0"
 
   val ostrichVersion = "9.1.0"
 
-  val scalazVersion = "7.0.0-M9"
+  val scalazVersion = "7.0.0"
+
+  val json4sVersion = "3.2.4"
 
   val sharedSettings = Seq(
-    version := "0.6.0",
+    version := "0.7.0",
     organization := "org.sazabi",
     scalaVersion := "2.10.1",
     scalacOptions ++= Seq(
@@ -76,6 +78,7 @@ object UtilBuild extends Build {
     name := "util-codec",
     libraryDependencies ++= Seq(
       "com.twitter" %% "util-core" % utilVersion % "compile",
+      "com.twitter" %% "util-codec" % utilVersion % "compile",
       "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
     )
   )
@@ -89,9 +92,11 @@ object UtilBuild extends Build {
     name := "util-core",
     libraryDependencies ++= Seq(
       "com.github.philcali" %% "scalendar" % "0.1.4" % "compile",
+      "org.json4s" %% "json4s-native" % json4sVersion % "compile",
+      "org.json4s" %% "json4s-scalaz" % json4sVersion % "compile",
       "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
     )
-  ).dependsOn(json)
+  )
 
   // finagle http
   lazy val finagleHttp = Project(
@@ -128,7 +133,8 @@ object UtilBuild extends Build {
     name := "util-json",
     libraryDependencies ++= Seq(
       "com.twitter" %% "util-core" % utilVersion % "compile",
-      "org.json4s" %% "json4s-native" % "3.2.3" % "compile",
+      "org.json4s" %% "json4s-native" % json4sVersion % "compile",
+      "org.json4s" %% "json4s-scalaz" % json4sVersion % "compile",
       "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
     )
   )

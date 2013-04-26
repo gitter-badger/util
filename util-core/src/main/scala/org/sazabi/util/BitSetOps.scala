@@ -1,8 +1,7 @@
 package org.sazabi.util
 
 import org.json4s.{JArray, JInt, JValue}
-
-import org.sazabi.util.json.{Formats, Result}
+import org.json4s.scalaz.JsonScalaz._
 
 import scala.collection.immutable.BitSet
 
@@ -26,26 +25,33 @@ trait ToBitSetOps {
  * A pimped trait for BitSet.
  */
 trait BitSetTypeClasses {
-  implicit lazy val bitSetJsonFormats: Formats[BitSet] = new Formats[BitSet] {
-    def read(json: JValue): Result[BitSet] = json match {
-      case JInt(n) => BitSet.fromBitMask(Array(n.longValue)).success
-      case JArray(arr) => {
-        Validation.fromTryCatch {
-          BitSet.fromBitMask(
-            arr.flatMap {
-              case JInt(n) => List(n.longValue)
-              case _ => List()
-            }.toArray)
-        }.swap.map(_.getMessage.wrapNel).swap
-      }
-      case _ => "Expected number value".failureNel
+  /**
+   * Implicit instance of org.json4s.scalaz.JsonScalaz.JSONR.
+   */
+  implicit val bitSetJSONR: JSONR[BitSet] = Result2JSONR {
+    case JInt(n) => BitSet.fromBitMask(Array(n.longValue)).success
+    case JArray(arr) => {
+      Validation.fromTryCatch {
+        BitSet.fromBitMask(
+          arr.flatMap {
+            case JInt(n) => n.longValue :: Nil
+            case _ => Nil
+          }.toArray)
+      }.swap.map(x => UncategorizedError("Invalid format", x.getMessage, Nil).wrapNel).swap
     }
-
-    def write(v: BitSet): Result[JValue] = {
-      JInt(new BitSetOps(v).toLong).success
-    }
+    case j => UnexpectedJSONError(j, classOf[JInt]).failureNel
   }
 
+  /**
+   * Implicit instance of org.json4s.scalaz.JsonScalaz.JSONW.
+   */
+  implicit val bitSetJSONW: JSONW[BitSet] = new JSONW[BitSet] with ToBitSetOps {
+    def write(value: BitSet): JValue = JInt(value.toLong)
+  }
+
+  /**
+   * Implicit instance of scalaz type classes.
+   */
   implicit lazy val bitSetScalazInstance:
     Monoid[BitSet] with Show[BitSet] with Order[BitSet] =
       new Monoid[BitSet] with Show[BitSet] with Order[BitSet] {
