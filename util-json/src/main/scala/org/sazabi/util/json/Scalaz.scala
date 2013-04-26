@@ -1,8 +1,7 @@
 package org.sazabi.util.json
 
-import org.json4s.{JDecimal, JDouble, JInt, JString, JValue}
-import org.json4s.native.scalaz.JValueShow
-import org.json4s.scalaz.JsonScalaz.{JValueEqual, JValueMonoid}
+import org.json4s.{JDecimal, JDouble, JInt, JNothing, JString, JValue}
+import org.json4s.native.JsonMethods.{compact, render}
 
 import _root_.scalaz._
 import std.anyVal._
@@ -12,11 +11,10 @@ import std.string._
 import syntax.monoid._
 
 trait ScalazTypeClasses {
-  implicit def jValueShow[A <: JValue]: Show[A] = JValueShow
-
-  implicit def jValueMonoid: Monoid[JValue] = JValueMonoid
-
-  implicit def jValueEqual: Equal[JValue] = JValueEqual
+  implicit def jValueShow[A <: JValue]: Show[A] = Show.shows {
+    case JNothing => ""
+    case json => compact(render(json))
+  }
 
   implicit def jIntMonoid: Monoid[JInt] = Monoid.instance(
     { case (JInt(n1), JInt(n2)) => JInt(n1 |+| n2) }, JInt(mzero[BigInt]))
