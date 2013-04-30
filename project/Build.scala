@@ -67,7 +67,21 @@ object UtilBuild extends Build {
       publishLocal := {},
       publishSigned := {}
     )
-  ).aggregate(codec, core, finagleHttp, id, json, netty, redis, twitter, zk)
+  ).aggregate(bijection, codec, core, finagleHttp, id, json, netty, redis, twitter, zk)
+
+  // Bijection
+  lazy val bijection = Project(
+    "util-bijection",
+    file("util-bijection"),
+    settings = Project.defaultSettings ++ sharedSettings
+  ).settings(
+    name := "util-bijection",
+    libraryDependencies ++= Seq(
+      "com.twitter" %% "bijection-core" % "0.3.0" % "compile",
+      "com.twitter" %% "util-logging" % utilVersion % "compile",
+      "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
+    )
+  )
 
   // Codecs
   lazy val codec = Project(
