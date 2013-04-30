@@ -3,6 +3,7 @@ package org.sazabi.util.json
 import org.sazabi.util.json.scalaz._
 
 import org.json4s._
+import org.json4s.scalaz.JsonScalaz._
 
 import org.specs2._
 
