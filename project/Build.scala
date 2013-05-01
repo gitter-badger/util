@@ -67,7 +67,18 @@ object UtilBuild extends Build {
       publishLocal := {},
       publishSigned := {}
     )
-  ).aggregate(bijection, codec, core, finagleHttp, id, json, netty, redis, twitter, zk)
+  ).aggregate(
+    bijection,
+    core,
+    finagleHttp,
+    id,
+    json,
+    netty,
+    redis,
+    scalendar,
+    twitter,
+    zk
+  )
 
   // Bijection
   lazy val bijection = Project(
@@ -79,20 +90,6 @@ object UtilBuild extends Build {
     libraryDependencies ++= Seq(
       "com.twitter" %% "bijection-core" % "0.3.0" % "compile",
       "com.twitter" %% "util-logging" % utilVersion % "compile",
-      "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
-    )
-  )
-
-  // Codecs
-  lazy val codec = Project(
-    "util-codec",
-    file("util-codec"),
-    settings = Project.defaultSettings ++ sharedSettings
-  ).settings(
-    name := "util-codec",
-    libraryDependencies ++= Seq(
-      "com.twitter" %% "util-core" % utilVersion % "compile",
-      "com.twitter" %% "util-codec" % utilVersion % "compile",
       "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
     )
   )
@@ -179,6 +176,22 @@ object UtilBuild extends Build {
       "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
     )
   ).dependsOn(twitter)
+
+  // Scalendar
+  lazy val scalendar = Project(
+    "util-scalendar",
+    file("util-scalendar"),
+    settings = Project.defaultSettings ++ sharedSettings
+  ).settings(
+    name := "util-scalendar",
+    libraryDependencies ++= Seq(
+      "com.twitter" %% "bijection-core" % "0.3.0" % "compile",
+      "com.github.philcali" %% "scalendar" % "0.1.4" % "compile",
+      "org.json4s" %% "json4s-native" % json4sVersion % "compile",
+      "org.json4s" %% "json4s-scalaz" % json4sVersion % "compile",
+      "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
+    )
+  )
 
   // twitter util
   lazy val twitter = Project(

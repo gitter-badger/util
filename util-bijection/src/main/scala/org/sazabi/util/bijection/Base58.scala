@@ -23,12 +23,12 @@ trait Base58Bijections {
 
   implicit val base58String2String: Injection[Base58String, String] =
     new AbstractInjection[Base58String, String] {
-      def apply(b58: Base58String): String = b58
+      def apply(b58: Base58String): String = b58.str
 
       override def invert(str: String): Option[Base58String] = {
         0 until str.size foreach { i =>
           if (Base58Chars.indexOf(str(i)) === -1) {
-            logger.warning("Injection[Base58String, String].invert() failed: " +
+            logger.warning("Injection.invert[Base58String, String]() failed: " +
               InvalidCharacterException(str(i), i).getMessage)
             return None
           }
@@ -85,4 +85,4 @@ trait Base58Bijections {
       s"An invalid character (${char})) at index ${index}")
 }
 
-object Base58Bijections extends Base58Bijections
+object base58 extends Base58Bijections
