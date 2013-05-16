@@ -10,5 +10,6 @@ import syntax.validation._
 
 trait Formats extends formats.ScalaFormats
   with formats.JavaUtilFormats
+  with formats.ScalazFormats
 
 object allFormats extends Formats

@@ -34,16 +34,16 @@ trait ScalaFormats {
    */
   implicit def seqJSONR[A : JSONR]: JSONR[Seq[A]] = Result2JSONR {
     case JArray(list) => {
-      val results = list.map(fromJSON[A](_))
+      val results = list.map(fromJSON[A])
       val errs = results.flatMap {
         case Failure(nel) => nel.list
         case _ => Nil
       }
       if (errs.isEmpty) {
-        Success(results.collect {
+        results.collect {
           case Success(r) => r
-        })
-      } else errs.toNel.cata(nel => nel.failure, throw new AssertionError)
+        }.success
+      } else errs.toNel.get.failure
     }
     case j => UnexpectedJSONError(j, classOf[JArray]).failureNel
   }
