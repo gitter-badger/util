@@ -1,6 +1,6 @@
 package org.sazabi.util.bijection
 
-import com.twitter.bijection._
+import com.twitter.bijection.{AbstractInjection, Injection}
 
 import java.nio.ByteBuffer
 import java.util.UUID
