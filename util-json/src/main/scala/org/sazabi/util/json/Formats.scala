@@ -8,51 +8,8 @@ import syntax.std.list._
 import syntax.std.option._
 import syntax.validation._
 
-trait Formats {
-  /**
-   * Implicit instance of json4s-scalaz JSONR for BigDecimal.
-   */
-  implicit object bigDecimalJSONR extends JSONR[BigDecimal] {
-    def read(json: JValue): Result[BigDecimal] = json match {
-      case JInt(i) => BigDecimal(i).success
-      case JDouble(d) => BigDecimal(d).success
-      case JDecimal(d) => d.success
-      case j => UnexpectedJSONError(j, classOf[JDecimal]).failureNel
-    }
-  }
+trait Formats extends formats.ScalaFormats
+  with formats.JavaUtilFormats
+  with formats.ScalazFormats
 
-  /**
-   * Implicit instance of json4s-scalaz JSONW for BigDecimal.
-   */
-  implicit object bigDecimalJSONW extends JSONW[BigDecimal] {
-    def write(value: BigDecimal): JValue = JDecimal(value)
-  }
-
-  /**
-   * Implicit instance of json4s-scalaz JSONR for Seq.
-   */
-  implicit def seqJSONR[A : JSONR]: JSONR[Seq[A]] = Result2JSONR {
-    case JArray(list) => {
-      val results = list.map(fromJSON[A](_))
-      val errs = results.flatMap {
-        case Failure(nel) => nel.list
-        case _ => Nil
-      }
-      if (errs.isEmpty) {
-        Success(results.collect {
-          case Success(r) => r
-        })
-      } else errs.toNel.cata(nel => nel.failure, throw new AssertionError)
-    }
-    case j => UnexpectedJSONError(j, classOf[JArray]).failureNel
-  }
-
-  /**
-   * Implicit instance of json4s-scalaz JSONW for Seq.
-   */
-  implicit def seqJSONW[A : JSONW]: JSONW[Seq[A]] = toJSONW { seq: Seq[A] =>
-    JArray(seq.map(toJSON(_)).toList)
-  }
-}
-
-object Formats extends Formats
+object allFormats extends Formats

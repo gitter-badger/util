@@ -4,18 +4,18 @@ import Keys._
 import com.typesafe.sbt.SbtPgp.PgpKeys._
 
 object UtilBuild extends Build {
-  val utilVersion = "6.3.0"
+  val utilVersion = "6.3.4"
 
-  val finagleVersion = "6.3.0"
+  val finagleVersion = "6.4.0"
 
-  val ostrichVersion = "9.1.0"
+  val ostrichVersion = "9.1.1"
 
   val scalazVersion = "7.0.0"
 
   val json4sVersion = "3.2.4"
 
   val sharedSettings = Seq(
-    version := "0.7.0",
+    version := "0.8.0",
     organization := "org.sazabi",
     scalaVersion := "2.10.1",
     scalacOptions ++= Seq(
@@ -67,20 +67,15 @@ object UtilBuild extends Build {
       publishLocal := {},
       publishSigned := {}
     )
-  ).aggregate(codec, core, finagleHttp, id, json, netty, redis, twitter, zk)
-
-  // Codecs
-  lazy val codec = Project(
-    "util-codec",
-    file("util-codec"),
-    settings = Project.defaultSettings ++ sharedSettings
-  ).settings(
-    name := "util-codec",
-    libraryDependencies ++= Seq(
-      "com.twitter" %% "util-core" % utilVersion % "compile",
-      "com.twitter" %% "util-codec" % utilVersion % "compile",
-      "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
-    )
+  ).aggregate(
+    core,
+    finagleHttp,
+    id,
+    json,
+    redis,
+    scalendar,
+    twitter,
+    zk
   )
 
   // Core utilities
@@ -139,18 +134,6 @@ object UtilBuild extends Build {
     )
   )
 
-  // netty
-  lazy val netty = Project(
-    "util-netty",
-    file("util-netty"),
-    settings = Project.defaultSettings ++ sharedSettings
-  ).settings(
-    name := "util-netty",
-    libraryDependencies ++= Seq(
-      "io.netty" % "netty" % "3.5.12.Final" % "compile"
-    )
-  )
-
   // Redis
   lazy val redis = Project(
     "util-redis",
@@ -165,6 +148,21 @@ object UtilBuild extends Build {
       "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
     )
   ).dependsOn(twitter)
+
+  // Scalendar
+  lazy val scalendar = Project(
+    "util-scalendar",
+    file("util-scalendar"),
+    settings = Project.defaultSettings ++ sharedSettings
+  ).settings(
+    name := "util-scalendar",
+    libraryDependencies ++= Seq(
+      "com.github.philcali" %% "scalendar" % "0.1.4" % "compile",
+      "org.json4s" %% "json4s-native" % json4sVersion % "compile",
+      "org.json4s" %% "json4s-scalaz" % json4sVersion % "compile",
+      "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
+    )
+  )
 
   // twitter util
   lazy val twitter = Project(

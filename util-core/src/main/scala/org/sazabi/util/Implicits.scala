@@ -2,7 +2,7 @@ package org.sazabi.util
 
 trait OpsImplicits extends ToBitSetOps with ToAllBytesOps
 
-trait TypeClassImplicits extends BitSetTypeClasses with ScalendarTypeClasses
+trait TypeClassImplicits extends BitSetTypeClasses
 
 object ops extends OpsImplicits
 object typeClasses extends TypeClassImplicits
