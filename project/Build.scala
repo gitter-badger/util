@@ -4,11 +4,11 @@ import Keys._
 import com.typesafe.sbt.SbtPgp.PgpKeys._
 
 object UtilBuild extends Build {
-  val utilVersion = "6.3.0"
+  val utilVersion = "6.3.4"
 
-  val finagleVersion = "6.3.0"
+  val finagleVersion = "6.4.0"
 
-  val ostrichVersion = "9.1.0"
+  val ostrichVersion = "9.1.1"
 
   val scalazVersion = "7.0.0"
 
@@ -72,7 +72,6 @@ object UtilBuild extends Build {
     finagleHttp,
     id,
     json,
-    netty,
     redis,
     scalendar,
     twitter,
@@ -132,18 +131,6 @@ object UtilBuild extends Build {
       "org.json4s" %% "json4s-native" % json4sVersion % "compile",
       "org.json4s" %% "json4s-scalaz" % json4sVersion % "compile",
       "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
-    )
-  )
-
-  // netty
-  lazy val netty = Project(
-    "util-netty",
-    file("util-netty"),
-    settings = Project.defaultSettings ++ sharedSettings
-  ).settings(
-    name := "util-netty",
-    libraryDependencies ++= Seq(
-      "io.netty" % "netty" % "3.5.12.Final" % "compile"
     )
   )
 
