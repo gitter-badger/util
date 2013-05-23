@@ -68,7 +68,6 @@ object UtilBuild extends Build {
       publishSigned := {}
     )
   ).aggregate(
-    bijection,
     core,
     finagleHttp,
     id,
@@ -78,20 +77,6 @@ object UtilBuild extends Build {
     scalendar,
     twitter,
     zk
-  )
-
-  // Bijection
-  lazy val bijection = Project(
-    "util-bijection",
-    file("util-bijection"),
-    settings = Project.defaultSettings ++ sharedSettings
-  ).settings(
-    name := "util-bijection",
-    libraryDependencies ++= Seq(
-      "com.twitter" %% "bijection-core" % "0.3.0" % "compile",
-      "com.twitter" %% "util-logging" % utilVersion % "compile",
-      "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
-    )
   )
 
   // Core utilities
@@ -185,7 +170,6 @@ object UtilBuild extends Build {
   ).settings(
     name := "util-scalendar",
     libraryDependencies ++= Seq(
-      "com.twitter" %% "bijection-core" % "0.3.0" % "compile",
       "com.github.philcali" %% "scalendar" % "0.1.4" % "compile",
       "org.json4s" %% "json4s-native" % json4sVersion % "compile",
       "org.json4s" %% "json4s-scalaz" % json4sVersion % "compile",
