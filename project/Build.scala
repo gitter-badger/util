@@ -15,7 +15,7 @@ object UtilBuild extends Build {
   val json4sVersion = "3.2.4"
 
   val sharedSettings = Seq(
-    version := "0.8.0",
+    version := "0.9.0-SNAPSHOT",
     organization := "org.sazabi",
     scalaVersion := "2.10.1",
     scalacOptions ++= Seq(
@@ -127,6 +127,7 @@ object UtilBuild extends Build {
   ).settings(
     name := "util-json",
     libraryDependencies ++= Seq(
+      "com.twitter" %% "finagle-core" % finagleVersion % "compile",
       "com.twitter" %% "util-core" % utilVersion % "compile",
       "org.json4s" %% "json4s-native" % json4sVersion % "compile",
       "org.json4s" %% "json4s-scalaz" % json4sVersion % "compile",
