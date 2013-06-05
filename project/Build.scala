@@ -115,8 +115,8 @@ object UtilBuild extends Build {
   ).settings(
     name := "util-id",
     libraryDependencies ++= Seq(
-      "com.twitter" %% "util-logging" % utilVersion % "compile",
-      "com.twitter" %% "ostrich" % ostrichVersion % "compile"
+      "com.twitter" %% "finagle-core" % finagleVersion % "compile",
+      "com.twitter" %% "util-logging" % utilVersion % "compile"
     )
   )
 
@@ -144,7 +144,6 @@ object UtilBuild extends Build {
   ).settings(
     name := "util-redis",
     libraryDependencies ++= Seq(
-      "com.twitter" %% "finagle-ostrich4" % finagleVersion % "compile",
       "com.twitter" %% "finagle-redis" % finagleVersion % "compile",
       "com.twitter" %% "util-core" % utilVersion % "compile",
       "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"

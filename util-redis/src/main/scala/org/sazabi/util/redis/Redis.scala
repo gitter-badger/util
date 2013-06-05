@@ -3,12 +3,11 @@ package org.sazabi.util.redis
 import Imports._
 
 import com.twitter.conversions.time._
+import com.twitter.finagle.Service
 import com.twitter.finagle.builder.ClientBuilder
 import com.twitter.finagle.redis.{Redis => FR, ServerError}
 import com.twitter.finagle.redis.protocol.{Command, Reply}
-import com.twitter.finagle.stats.OstrichStatsReceiver
-import com.twitter.finagle.Service
-import com.twitter.ostrich.stats.Stats
+import com.twitter.finagle.stats.StatsReceiver
 import com.twitter.util.{Future, FuturePool}
 
 import java.net.InetSocketAddress
@@ -22,13 +21,15 @@ import syntax.functor._
 abstract class Redis(hosts: String, db: Int) {
   protected def futurePool: FuturePool
 
+  protected def statsReceiver: StatsReceiver
+
   protected def service(): Service[Command, Reply] = ClientBuilder()
     .codec(FR())
     .hosts(hosts)
     .hostConnectionLimit(1)
     .tcpConnectTimeout(3000.milliseconds)
     .retries(2)
-    .reportTo(new OstrichStatsReceiver(Stats))
+    .reportTo(statsReceiver)
     .build()
 
   def withClient[A](f: Client => Future[A]): Future[A] =

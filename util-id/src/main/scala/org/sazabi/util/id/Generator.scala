@@ -1,7 +1,7 @@
 package org.sazabi.util.id
 
+import com.twitter.finagle.stats.StatsReceiver
 import com.twitter.logging.Logger
-import com.twitter.ostrich.stats.Stats
 
 /**
  * Id generator based on timestamps.
@@ -16,6 +16,16 @@ trait Generator { self =>
   def serverId: Long
 
   /**
+   * StatsReceiver.
+   */
+  def statsReceiver: StatsReceiver
+
+  /**
+   * Logger.
+   */
+  def logger: Logger
+
+  /**
    * The base timestamp value.
    */
   def epoch: Long
@@ -23,12 +33,12 @@ trait Generator { self =>
   /**
    * The size of the sequence part in bits.
    */
-  def sequenceBits: Int
+  def sequenceBits: Long
 
   /**
    * The size of the server id part in bits.
    */
-  def serverIdBits: Int
+  def serverIdBits: Long
 
   /**
    * Generate next id.
@@ -46,7 +56,7 @@ trait Generator { self =>
     }
 
     if (timestamp < lastTimestamp) {
-      log.error("Clock is moving backwards. Rejecting requests until %d.",
+      logger.error("Clock is moving backwards. Rejecting requests until %d.",
         lastTimestamp)
       exceptionCounter.incr()
       throw new IllegalStateException(
@@ -69,12 +79,13 @@ trait Generator { self =>
   /**
    * Get a timestamp from the generated id.
    */
-  def timestamp(id: Long): Long = (id >> timestampLeftShift) + epoch
+  def idToTimestamp(id: Long): Long = (id >> timestampLeftShift) + epoch
 
   /**
    * Get a minimum id on given timestamp.
    */
-  def minimumId(timestamp: Long): Long = (timestamp - epoch) << timestampLeftShift
+  def timestampToId(timestamp: Long): Long =
+    (timestamp - epoch) << timestampLeftShift
 
   protected def tilNextMillis(lastTimestamp: Long): Long = {
     var timestamp = now
@@ -86,13 +97,11 @@ trait Generator { self =>
 
   protected def now: Long = System.currentTimeMillis
 
-  private val genCounter = Stats.getCounter("id-generator_generated")
-  private val exceptionCounter = Stats.getCounter("id-generator_exceptions")
+  private val genCounter = statsReceiver.counter("id-generator_generated")
+  private val exceptionCounter = statsReceiver.counter("id-generator_exceptions")
 
   private var sequence = 0L
   private var lastTimestamp = -1L
-
-  private val log = Logger("id-generator")
 
   if (self.sequenceBits <= 0) {
     exceptionCounter.incr()
@@ -118,7 +127,7 @@ trait Generator { self =>
 
   private lazy val timestampLeftShift = sequenceBits + serverIdBits
 
-  log.ifInfo("""Id generator starting. timestamp left shift %d, server-id bits %d,
-    |  sequence bits %d, server-id %d""".stripMargin.format(timestampLeftShift,
-      serverIdBits, sequenceBits, serverId))
+  logger.ifInfo("""Id generator starting. timestamp left shift %d,
+    |  server-id bits %d, sequence bits %d, server-id %d""".stripMargin
+      .format(timestampLeftShift, serverIdBits, sequenceBits, serverId))
 }
