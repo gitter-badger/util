@@ -8,14 +8,12 @@ object UtilBuild extends Build {
 
   val finagleVersion = "6.4.0"
 
-  val ostrichVersion = "9.1.1"
-
   val scalazVersion = "7.0.0"
 
   val json4sVersion = "3.2.4"
 
   val sharedSettings = Seq(
-    version := "0.9.0-SNAPSHOT",
+    version := "0.8.1",
     organization := "org.sazabi",
     scalaVersion := "2.10.1",
     scalacOptions ++= Seq(
