@@ -8,14 +8,12 @@ object UtilBuild extends Build {
 
   val finagleVersion = "6.4.0"
 
-  val ostrichVersion = "9.1.1"
-
   val scalazVersion = "7.0.0"
 
   val json4sVersion = "3.2.4"
 
   val sharedSettings = Seq(
-    version := "0.8.0",
+    version := "0.8.1",
     organization := "org.sazabi",
     scalaVersion := "2.10.1",
     scalacOptions ++= Seq(
@@ -23,8 +21,9 @@ object UtilBuild extends Build {
       "-deprecation",
       "-feature"
     ),
+    resolvers += Resolver.sonatypeRepo("snapshots"),
     libraryDependencies ++= Seq(
-      "org.specs2" %% "specs2" % "1.14" % "test"
+      "org.specs2" %% "specs2" % "1.14.1-SNAPSHOT" % "test"
     ),
     useGpg := true,
     publishMavenStyle := true,
@@ -114,8 +113,8 @@ object UtilBuild extends Build {
   ).settings(
     name := "util-id",
     libraryDependencies ++= Seq(
-      "com.twitter" %% "util-logging" % utilVersion % "compile",
-      "com.twitter" %% "ostrich" % ostrichVersion % "compile"
+      "com.twitter" %% "finagle-core" % finagleVersion % "compile",
+      "com.twitter" %% "util-logging" % utilVersion % "compile"
     )
   )
 
@@ -127,6 +126,7 @@ object UtilBuild extends Build {
   ).settings(
     name := "util-json",
     libraryDependencies ++= Seq(
+      "com.twitter" %% "finagle-core" % finagleVersion % "compile",
       "com.twitter" %% "util-core" % utilVersion % "compile",
       "org.json4s" %% "json4s-native" % json4sVersion % "compile",
       "org.json4s" %% "json4s-scalaz" % json4sVersion % "compile",
@@ -142,7 +142,6 @@ object UtilBuild extends Build {
   ).settings(
     name := "util-redis",
     libraryDependencies ++= Seq(
-      "com.twitter" %% "finagle-ostrich4" % finagleVersion % "compile",
       "com.twitter" %% "finagle-redis" % finagleVersion % "compile",
       "com.twitter" %% "util-core" % utilVersion % "compile",
       "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"

@@ -2,6 +2,9 @@ package org.sazabi.util.twitter
 
 import com.twitter.util.{Future, Return, Throw, Try}
 
+import scala.language.implicitConversions
+import scala.util.{Try => STry}
+
 import scalaz._
 
 /**
@@ -31,4 +34,8 @@ trait TryTypeClasses {
     def point[A](a: => A): Try[A] = Try(a)
     def bind[A, B](fa: Try[A])(f: A => Try[B]): Try[B] = fa flatMap f
   }
+}
+
+trait TryToScala {
+  implicit def tryToScala[A](t: Try[A]): STry[A] = STry(t.get)
 }

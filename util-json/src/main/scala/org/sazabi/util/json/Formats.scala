@@ -9,6 +9,7 @@ import syntax.std.option._
 import syntax.validation._
 
 trait Formats extends formats.ScalaFormats
+  with formats.JavaNetFormats
   with formats.JavaUtilFormats
   with formats.ScalazFormats
 

@@ -10,18 +10,19 @@ import org.specs2._
 import _root_.scalaz._
 import syntax.monoid._
 
-class ScalazInstanceSpec extends Specification {
-  def is =
-    "Monoid" ^ p^
-      "Monoid[JValue] should" ^
-        "|+| appends values into JArray" ! monoidJValueAppend ^
-        "x |+| mzero[JValue] == x" ! monoidJValueZero ^ end ^
-      "Monoid[JInt] should" ^
-        "If int x + y == z, JInt(x) |+| JInt(y) == JInt(z)" ! monoidJIntAppend ^
-        "x |+| mzero[JInt] == x"  ! monoidJIntZero ^ end ^
-      "Monoid[JString] should" ^
-        "If str1 + str2 == str3, JString(str1) |+| JString(str2) == JString(str3)" ! monoidJStringAppend ^
-        "x |+| mzero[JString] == x" ! monoidJStringZero ^ end
+class ScalazInstanceSpec extends Specification { def is = s2"""
+  Monoid
+    Monoid[JValue] should
+      |+| appends values into JArray      $monoidJValueAppend
+      x |+| mzero[JValue] == x            $monoidJValueZero
+
+    Monoid[JInt] should
+      If int x + y == z, JInt(x) |+| JInt(y) == JInt(z)   $monoidJIntAppend
+      x |+| mzero[JInt] == x                              $monoidJIntZero
+
+    Monoid[JString] should
+      If str1 + str2 == str3, JString(str1) |+| JString(str2) == JString(str3)  $monoidJStringAppend
+      x |+| mzero[JString] == x     $monoidJStringZero"""
 
   val n1 = 10
   val n2 = 15
