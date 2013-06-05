@@ -23,8 +23,9 @@ object UtilBuild extends Build {
       "-deprecation",
       "-feature"
     ),
+    resolvers += Resolver.sonatypeRepo("snapshots"),
     libraryDependencies ++= Seq(
-      "org.specs2" %% "specs2" % "1.14" % "test"
+      "org.specs2" %% "specs2" % "1.14.1-SNAPSHOT" % "test"
     ),
     useGpg := true,
     publishMavenStyle := true,

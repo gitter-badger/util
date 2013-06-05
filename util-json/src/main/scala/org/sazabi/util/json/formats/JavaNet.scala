@@ -37,7 +37,8 @@ trait JavaNetFormats {
    * Implicit JSONW instance of InetAddress.
    */
   implicit val InetAddressJSONW: JSONW[InetAddress] = toJSONW { addr =>
-    JString(addr.toString)
+    val str = addr.toString
+    JString(str.drop(str.indexOf('/') + 1))
   }
 
   /**
@@ -59,7 +60,9 @@ trait JavaNetFormats {
    * Implicit JSONW instance of InetSocketAddress.
    */
   implicit val InetSocketAddressJSONW: JSONW[InetSocketAddress] = toJSONW {
-    addr => JString(addr.toString)
+    addr =>
+      val str = addr.toString
+      JString(str.drop(str.indexOf('/') + 1))
   }
 
   /**
