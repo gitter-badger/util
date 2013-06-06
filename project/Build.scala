@@ -4,9 +4,9 @@ import Keys._
 import com.typesafe.sbt.SbtPgp.PgpKeys._
 
 object UtilBuild extends Build {
-  val utilVersion = "6.3.4"
+  val utilVersion = "6.3.5"
 
-  val finagleVersion = "6.4.0"
+  val finagleVersion = "6.4.1"
 
   val scalazVersion = "7.0.0"
 
