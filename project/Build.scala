@@ -13,7 +13,7 @@ object UtilBuild extends Build {
   val json4sVersion = "3.2.4"
 
   val sharedSettings = Seq(
-    version := "0.9.0-SNAPSHOT",
+    version := "0.8.2",
     organization := "org.sazabi",
     scalaVersion := "2.10.2",
     scalacOptions ++= Seq(
