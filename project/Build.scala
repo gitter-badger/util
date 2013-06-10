@@ -4,18 +4,18 @@ import Keys._
 import com.typesafe.sbt.SbtPgp.PgpKeys._
 
 object UtilBuild extends Build {
-  val utilVersion = "6.3.4"
+  val utilVersion = "6.3.5"
 
-  val finagleVersion = "6.4.0"
+  val finagleVersion = "6.4.1"
 
   val scalazVersion = "7.0.0"
 
   val json4sVersion = "3.2.4"
 
   val sharedSettings = Seq(
-    version := "0.8.1",
+    version := "0.8.2",
     organization := "org.sazabi",
-    scalaVersion := "2.10.1",
+    scalaVersion := "2.10.2",
     scalacOptions ++= Seq(
       "-unchecked",
       "-deprecation",
