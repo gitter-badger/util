@@ -4,9 +4,9 @@ import Keys._
 import com.typesafe.sbt.SbtPgp.PgpKeys._
 
 object UtilBuild extends Build {
-  val utilVersion = "6.3.5"
+  val utilVersion = "6.3.7"
 
-  val finagleVersion = "6.4.1"
+  val finagleVersion = "6.5.1"
 
   val scalazVersion = "7.0.0"
 
@@ -21,9 +21,8 @@ object UtilBuild extends Build {
       "-deprecation",
       "-feature"
     ),
-    resolvers += Resolver.sonatypeRepo("snapshots"),
     libraryDependencies ++= Seq(
-      "org.specs2" %% "specs2" % "1.14.1-SNAPSHOT" % "test"
+      "org.specs2" %% "specs2" % "2.0" % "test"
     ),
     useGpg := true,
     publishMavenStyle := true,
@@ -71,7 +70,6 @@ object UtilBuild extends Build {
     finagleHttp,
     id,
     json,
-    redis,
     scalendar,
     twitter,
     zk
@@ -133,20 +131,6 @@ object UtilBuild extends Build {
       "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
     )
   )
-
-  // Redis
-  lazy val redis = Project(
-    "util-redis",
-    file("util-redis"),
-    settings = Project.defaultSettings ++ sharedSettings
-  ).settings(
-    name := "util-redis",
-    libraryDependencies ++= Seq(
-      "com.twitter" %% "finagle-redis" % finagleVersion % "compile",
-      "com.twitter" %% "util-core" % utilVersion % "compile",
-      "org.scalaz" %% "scalaz-core" % scalazVersion % "compile"
-    )
-  ).dependsOn(twitter)
 
   // Scalendar
   lazy val scalendar = Project(
