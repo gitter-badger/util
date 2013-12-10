@@ -10,33 +10,11 @@ import java.net.{InetAddress, InetSocketAddress, URL}
 import org.json4s._
 import org.json4s.scalaz.JsonScalaz._
 
-import org.specs2._
+import org.scalatest._
 
 import _root_.scalaz._
 
-class JavaNetFormatsSpec extends Specification with JavaNetFormats { def is = s2"""
-  InetAddress
-    JSONR[InetAddress] should
-      convert JString to InetAddress      $JStringToInetAddress
-      convert JInt to InetAddress         $JIntToInetAddress
-
-    JSONW[InetAddress] should
-      convert InetAddress to JString      $InetAddressToJString
-
-  InetSocketAddress
-    JSONR[InetSocketAddress] should
-      convert JString to InetSocketAddress  $JStringToInetSocketAddress
-
-    JSONW[InetSocketAddress] should
-      convert InetSocketAddress to JString  $InetSocketAddressToJString
-
-  URL
-    JSONR[URL] should
-      convert JString to URL  $JStringToURL
-
-    JSONW[URL] should
-      convert URL to JString  $URLToJString"""
-
+class JavaNetFormatsSpec extends FunSpec with Matchers with JavaNetFormats {
   val host = "127.0.0.1"
   val address = InetAddress.getByAddress(Array(127, 0, 0, 1))
   val ipAddress = NetUtil.ipToInt(host)
@@ -47,31 +25,46 @@ class JavaNetFormatsSpec extends Specification with JavaNetFormats { def is = s2
   val urlString = "https://github.com/solar/util"
   val url = new URL(urlString)
 
-  def JStringToInetAddress = {
-    fromJSON[InetAddress](JString(host)) must_== Success(address)
+  describe("InetAddress") {
+    describe("JSONR") {
+      it("should convert JString to InetAddress") {
+        fromJSON[InetAddress](JString(host)) should be (Success(address))
+      }
+
+      it("should convert JInt to InetAddress") {
+        fromJSON[InetAddress](JInt(ipAddress)) should be (Success(address))
+      }
+    }
+
+    describe("JSONW") {
+      it("should convert InetAddress to JString") {
+        toJSON(address) should be (JString(host))
+      }
+    }
   }
 
-  def JIntToInetAddress = {
-    fromJSON[InetAddress](JInt(ipAddress)) must_== Success(address)
+  describe("InetSocketAddress") {
+    describe("JSONR") {
+      it("should convert JString to InetSocketAddress") {
+        fromJSON[InetSocketAddress](JString(withPort)) should be (
+          Success(socketAddress))
+      }
+
+      it("should convert InetSocketAddress to JString") {
+        toJSON(socketAddress) should be(JString(withPort))
+      }
+    }
   }
 
-  def InetAddressToJString = {
-    toJSON(address) must_== JString(host)
-  }
+  describe("URL") {
+    describe("JSONR") {
+      it("should convert JString to URL") {
+        fromJSON[URL](JString(urlString)) should be (Success(url))
+      }
 
-  def JStringToInetSocketAddress = {
-    fromJSON[InetSocketAddress](JString(withPort)) must_== Success(socketAddress)
-  }
-
-  def InetSocketAddressToJString = {
-    toJSON(socketAddress) must_== JString(withPort)
-  }
-
-  def JStringToURL = {
-    fromJSON[URL](JString(urlString)) must_== Success(url)
-  }
-
-  def URLToJString = {
-    toJSON(url) must_== JString(urlString)
+      it("should convert URL to JString") {
+        toJSON(url) should be (JString(urlString))
+      }
+    }
   }
 }

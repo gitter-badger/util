@@ -11,6 +11,8 @@ import syntax.validation._
 trait Formats extends formats.ScalaFormats
   with formats.JavaNetFormats
   with formats.JavaUtilFormats
+  with formats.ScalaCollectionFormats
+  with formats.ScalaEnumFormats
   with formats.ScalazFormats
 
 object allFormats extends Formats

@@ -1,29 +1,16 @@
 package org.sazabi.util.json
 
-import org.sazabi.util.json.scalaz._
-
 import org.json4s._
 import org.json4s.scalaz.JsonScalaz._
 
-import org.specs2._
+import org.sazabi.util.json.scalaz._
+
+import org.scalatest._
 
 import _root_.scalaz._
 import syntax.monoid._
 
-class ScalazInstanceSpec extends Specification { def is = s2"""
-  Monoid
-    Monoid[JValue] should
-      |+| appends values into JArray      $monoidJValueAppend
-      x |+| mzero[JValue] == x            $monoidJValueZero
-
-    Monoid[JInt] should
-      If int x + y == z, JInt(x) |+| JInt(y) == JInt(z)   $monoidJIntAppend
-      x |+| mzero[JInt] == x                              $monoidJIntZero
-
-    Monoid[JString] should
-      If str1 + str2 == str3, JString(str1) |+| JString(str2) == JString(str3)  $monoidJStringAppend
-      x |+| mzero[JString] == x     $monoidJStringZero"""
-
+class ScalazInstanceSpec extends FunSpec with Matchers {
   val n1 = 10
   val n2 = 15
   val n3 = n1 + n2
@@ -35,27 +22,38 @@ class ScalazInstanceSpec extends Specification { def is = s2"""
   val v1: JValue = JString("test")
   val v2: JValue = JInt(10)
 
-  def monoidJValueAppend = {
-    v1 |+| v2 must_== JArray(v1 :: v2 :: Nil)
-  }
+  describe("Scalaz instances") {
+    describe("Monoid") {
+      describe("Monoid[JValue]") {
+        it("|+| should append values into JArray") {
+          v1 |+| v2 should be (JArray(v1 :: v2 :: Nil))
+        }
 
-  def monoidJValueZero = {
-    v1 |+| mzero[JValue] must_== v1
-  }
+        it("x |+| mzero[JValue] should be x") {
+          v1 |+| mzero[JValue] should be (v1)
+        }
+      }
 
-  def monoidJIntAppend = {
-    JInt(n1) |+| JInt(n2) must_== JInt(n3)
-  }
+      describe("Monoid[JInt]") {
+        it("if x + y is z, JInt(x) |+| JInt(y) should be JInt(z)") {
+          JInt(n1) |+| JInt(n2) should be (JInt(n3))
+        }
 
-  def monoidJIntZero = {
-    JInt(n1) |+| mzero[JInt] must_== JInt(n1)
-  }
+        it("x |+| mzero[JInt] should be x") {
+          JInt(n1) |+| mzero[JInt] should be (JInt(n1))
+        }
+      }
 
-  def monoidJStringAppend = {
-    JString(s1) |+| JString(s2) must_== JString(s3)
-  }
+      describe("Monoid[JString]") {
+        it("if str1 + str2 is str3, JString(str1) |+| JString(str3) " +
+            "should be JString(str)") {
+          JString(s1) |+| JString(s2) should be (JString(s3))
+        }
 
-  def monoidJStringZero = {
-    JString(s1) |+| mzero[JString] must_== JString(s1)
+        it("x |+| mzero[JString] should be x") {
+          JString(s1) |+| mzero[JString] should be (JString(s1))
+        }
+      }
+    }
   }
 }

@@ -9,6 +9,8 @@ import _root_.scalaz._
 import scalendar.Scalendar
 
 trait ScalendarScalazTypeClasses {
+  case class ScalendarFormat(format: SimpleDateFormat)
+
   /**
    * Implicit instance of scalaz.Order.
    */
@@ -17,9 +19,8 @@ trait ScalendarScalazTypeClasses {
   /**
    * Implicit instance of scalaz.Show.
    */
-  implicit def scalendarShow(implicit sdf: SimpleDateFormat): Show[Scalendar] =
-    Show.show(cal => Cord(sdf.format(cal.time)))
-
+  implicit def scalendarShow(implicit sf: ScalendarFormat): Show[Scalendar] =
+    Show.show(cal => Cord(sf.format.format(cal.time)))
 }
 
 object scalaz extends ScalendarScalazTypeClasses

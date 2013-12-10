@@ -1,7 +1,7 @@
 package org.sazabi.util.json
 
 import org.json4s.{JDecimal, JDouble, JInt, JNothing, JString, JValue}
-import org.json4s.native.JsonMethods.{compact, render}
+import org.json4s.jackson.JsonMethods.{compact, render}
 
 import _root_.scalaz._
 import std.anyVal._

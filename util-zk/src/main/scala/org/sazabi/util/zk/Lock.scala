@@ -51,8 +51,6 @@ trait Lock extends Serialized {
 
   private lazy val client: ZkClient = zkClient.withAcl(OPEN_ACL_UNSAFE.asScala)
 
-  private val log: Logger = Logger("zookeeper")
-
   /**
    * Base(parent) node for locks.
    */

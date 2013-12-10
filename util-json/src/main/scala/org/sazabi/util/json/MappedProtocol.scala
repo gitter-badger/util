@@ -12,9 +12,10 @@ trait MappedProtocol {
     def write(value: A): JValue = toJSON(conv(value))
   }
 
-  def mappedJSON[A, B : JSONR : JSONW](conv: A => B)(inv: B => A): JSON[A] = new JSON[A] {
-    def read(json: JValue): Result[A] = fromJSON[B](json).map(inv)
+  def mappedJSON[A, B : JSONR : JSONW](conv: A => B)(inv: B => A): JSON[A] =
+    new JSON[A] {
+      def read(json: JValue): Result[A] = fromJSON[B](json).map(inv)
 
-    def write(value: A): JValue = toJSON(conv(value))
-  }
+      def write(value: A): JValue = toJSON(conv(value))
+    }
 }
