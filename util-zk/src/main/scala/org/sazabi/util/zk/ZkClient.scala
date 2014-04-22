@@ -3,7 +3,7 @@ package org.sazabi.util.zk
 import org.sazabi.util.zk.ops._
 
 import com.twitter.util.Future
-import com.twitter.zk.{ZkClient, ZNode}
+import com.twitter.zk.{ ZkClient, ZNode }
 
 import org.apache.zookeeper.ZooDefs.Ids.OPEN_ACL_UNSAFE
 
@@ -13,8 +13,6 @@ class ZkClientOps(val value: ZkClient) extends AnyVal {
   def withUnsafeAcl: ZkClient = value.withAcl(OPEN_ACL_UNSAFE.asScala)
 
   def ensureNode(node: ZNode): Future[ZNode] = Zk.ensureNode(value, node)
-
-  def parentNode(node: ZNode): ZNode = ZNode(value, node.parentNodePath)
 }
 
 trait ToZkClientOps {

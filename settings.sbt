@@ -4,11 +4,13 @@ version := "0.11.0-SNAPSHOT"
 
 organization := "org.sazabi"
 
-scalaVersion := "2.10.3"
+scalaVersion := "2.10.4"
 
 scalacOptions ++= Seq(
   "-unchecked",
   "-deprecation",
   "-feature")
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "2.0" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % "2.1.3" % "test"
+
+incOptions := incOptions.value.withNameHashing(true)

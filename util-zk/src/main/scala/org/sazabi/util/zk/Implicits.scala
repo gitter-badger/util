@@ -2,7 +2,7 @@ package org.sazabi.util.zk
 
 import com.twitter.zk.ZNode
 
-trait OpsImplicits extends ToZNodeOps with ToZkClientOps
+trait OpsImplicits extends ToZkClientOps
 trait TypeClassImplicits extends ZNodeTypeClasses
 
 object ops extends OpsImplicits

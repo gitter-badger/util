@@ -20,7 +20,7 @@ object Zk {
     node.exists() rescue {
       case e: KeeperException.NoNodeException => {
         log.ifDebug("%s is not exists".format(node))
-        if (node.path == node.parentNodePath) {
+        if (node.path == node.parentPath) {
           log.ifDebug("Creating %s".format(node))
           node.create() rescue {
             case e: IllegalArgumentException if node.path === "/" =>
@@ -28,7 +28,7 @@ object Zk {
             case e: KeeperException.NodeExistsException => Future.value(node)
           }
         } else {
-          ensureNode(zkClient, zkClient.parentNode(node)) flatMap { parent =>
+          ensureNode(zkClient, node.parent) flatMap { parent =>
             log.ifDebug("Creating %s".format(node))
             node.create()
           } rescue {
