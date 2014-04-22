@@ -15,6 +15,7 @@ lazy val root = project in(file(".")) autoSettings(
 ) settings(
   packagedArtifacts := Map.empty
 ) aggregate(
+  argonaut,
   core,
   finagleHttp,
   id,
@@ -22,6 +23,13 @@ lazy val root = project in(file(".")) autoSettings(
   scal,
   twitter,
   zk
+)
+
+lazy val argonaut = proj("argonaut") autoSettings(
+  userSettings, allPlugins, sbtFiles(files: _*)
+) settings (
+  libraryDependencies += "io.argonaut" %% "argonaut" % "6.0.3",
+  libraryDependencies ++= finagle("core") ++ util("core")
 )
 
 lazy val core = proj("core") autoSettings(
