@@ -1,7 +1,5 @@
 import AddSettings._
 
-import Dependencies._
-
 val files = Seq(file("../settings.sbt"),
   file("../publish.sbt"))
 
@@ -19,8 +17,6 @@ lazy val root = project in(file(".")) autoSettings(
   core,
   finagleHttp,
   id,
-  json,
-  scal,
   twitter,
   zk
 )
@@ -50,20 +46,6 @@ lazy val id = proj("id") autoSettings(
   libraryDependencies ++= finagle("core") ++ util("logging")
 )
 
-lazy val json = proj("json") autoSettings(
-  userSettings, allPlugins, sbtFiles(files: _*)
-) settings (
-  libraryDependencies ++= finagle("core") ++ json4s ++
-    util("core") ++ scalaz("core")
-) dependsOn(core)
-
-lazy val scal = proj("scalendar") autoSettings(
-  userSettings, allPlugins, sbtFiles(files: _*)
-) settings (
-  libraryDependencies ++= json4s ++
-    scalaz("core") :+ scalendar
-)
-
 lazy val twitter = proj("twitter") autoSettings(
   userSettings, allPlugins, sbtFiles(files: _*)
 ) settings (
@@ -75,3 +57,20 @@ lazy val zk = proj("zk") autoSettings(
 ) settings (
   libraryDependencies ++= util("zk") ++ scalaz("core")
 )
+
+def finagle(names: String*) = names map { name =>
+  "com.twitter" %% s"finagle-$name" % "6.15.0"
+}
+
+def scalaz(names: String*) = names map { name =>
+  "org.scalaz" %% s"scalaz-$name" % "7.0.6"
+}
+
+def util(names: String*) = names map {
+  case "zk" =>
+    ("com.twitter" %% "util-zk" % "6.15.0")
+      .exclude("com.sun.jdmk", "jmxtools")
+      .exclude("com.sun.jmx", "jmxri")
+      .exclude("javax.jms", "jms")
+  case name => "com.twitter" %% s"util-$name" % "6.15.0"
+}

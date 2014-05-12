@@ -1,6 +1,6 @@
 import sbt._
 
-version := "0.11.0-SNAPSHOT"
+version := "0.12.0-SNAPSHOT"
 
 organization := "org.sazabi"
 
