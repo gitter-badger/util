@@ -11,6 +11,6 @@ scalacOptions ++= Seq(
   "-deprecation",
   "-feature")
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "2.1.3" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % "2.1.6" % "test"
 
 incOptions := incOptions.value.withNameHashing(true)
